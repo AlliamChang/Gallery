@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gallery</title>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+</head>
+<body>
+<h1>This is our gallery!</h1>
+<form enctype="multipart/form-data" action="/user/photo" method="post">
+    图片<input type="file" name="file">
+    <input type="submit" value="上传">
+    <ul>
+        <li th:each="img, iterStat: ${files}">
+            <img th:src="${img}"/>
+        </li>
+    </ul>
+</form>
+</body>
+</html>

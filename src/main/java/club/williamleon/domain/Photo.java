@@ -1,0 +1,112 @@
+package club.williamleon.domain;
+
+import javax.persistence.*;
+import java.util.Date;
+
+/**
+ * Created by 53068 on 2018/4/26 0026.
+ */
+@Entity
+@Table(name = "photo")
+public class Photo {
+
+    @Id
+    @GeneratedValue
+    private Long id;
+
+    @Column(name = "group_id")
+    private Long groupId;
+
+    @Column(name = "up_id")
+    private Long upId;
+
+    @Column(name = "name")
+    private String name;
+
+    @Column(name = "up_time")
+    private Date upTime;
+
+    @Column(name = "origin_time")
+    private Date originTime;
+
+    @Column(name = "description")
+    private String description;
+
+    @Column(name = "is_public")
+    private boolean isPublic;
+
+    @Column(name = "click")
+    private Long click;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Long getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Long groupId) {
+        this.groupId = groupId;
+    }
+
+    public Long getUpId() {
+        return upId;
+    }
+
+    public void setUpId(Long upId) {
+        this.upId = upId;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getUpTime() {
+        return upTime;
+    }
+
+    public void setUpTime(Date upTime) {
+        this.upTime = upTime;
+    }
+
+    public Date getOriginTime() {
+        return originTime;
+    }
+
+    public void setOriginTime(Date originTime) {
+        this.originTime = originTime;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isPublic() {
+        return isPublic;
+    }
+
+    public void setPublic(boolean aPublic) {
+        isPublic = aPublic;
+    }
+
+    public Long getClick() {
+        return click;
+    }
+
+    public void setClick(Long click) {
+        this.click = click;
+    }
+}

@@ -26,4 +26,7 @@
 mvnw
 mvnw.cmd
 .mvn/
+.idea/
 target/
+doc/
+img/
