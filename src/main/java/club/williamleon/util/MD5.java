@@ -41,6 +41,7 @@ public class MD5 {
             }
             hex.append(Integer.toHexString(b & 0xFF));
         }
+        System.out.println();
         return hex.toString();
     }
 

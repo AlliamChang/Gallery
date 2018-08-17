@@ -1,27 +1,26 @@
 package club.williamleon.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by 53068 on 2018/4/27 0027.
  */
 @Entity
-public class User {
+@Table(name = "user")
+public class UserEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "username", nullable = false, length = 20)
     private String username;
 
     @Column(name = "nickname")
     private String nickname;
 
-    @Column(name = "email")
+    @Column(name = "email", unique = true)
     private String email;
 
     public Long getId() {

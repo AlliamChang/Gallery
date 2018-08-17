@@ -1,35 +1,33 @@
 package club.williamleon.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by 53068 on 2018/4/27 0027.
  */
 @Entity
-public class Group {
+@Table(name = "gallery")
+public class GroupEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "description")
+    @Column(name = "description", nullable = false)
     private String description;
 
     @Column(name = "is_public")
     private boolean isPublic;
 
+    @Column(name = "creator", nullable = false)
+    private Long creator;
+
     public Long getId() {
         return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -53,6 +51,15 @@ public class Group {
     }
 
     public void setPublic(boolean aPublic) {
+
         isPublic = aPublic;
+    }
+
+    public Long getCreator() {
+        return creator;
+    }
+
+    public void setCreator(Long creator) {
+        this.creator = creator;
     }
 }

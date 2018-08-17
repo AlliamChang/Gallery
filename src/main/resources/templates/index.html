@@ -2,9 +2,34 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="author" content="Aven">
+    <title>Gallery</title>
+    <link rel="shortcut icon" href="/img/cloud.ico">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
 </head>
 <body>
-
+<label for="account">Account: </label><input type="text" id="account" placeholder="Email/Username">
+<label for="password">Password: </label><input type="password" id="password">
+<button id="login">Login</button>
 </body>
+<script>
+    $(document).ready(function () {
+        $('#login').on('click', function () {
+            $.ajax({
+                type: "POST",
+                url: "/user/login",
+                async: false,
+                data: {account: $('#account').val(), passwd: $('#password').val()},
+                success: function (data) {
+                    alert(data);
+                    document.cookie = "token=" + data + "; path=/";
+                    window.location.href = "/test";
+                },
+                error: function (status) {
+                    alert(status);
+                }
+            })
+        })
+    })
+</script>
 </html>

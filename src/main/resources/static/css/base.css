@@ -1,0 +1,191 @@
+body {
+    font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei";
+}
+
+.container {
+    height: 100%;
+}
+
+.bb-custom-wrapper {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+
+.bb-custom-wrapper .bb-bookblock {
+    width: 94%;
+    height: 96%;
+    top: 2%;
+    left: 3%;
+    position: absolute;
+    -webkit-perspective: 2000px;
+    perspective: 2000px;
+    z-index: 1;
+}
+
+.bb-item {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: black;
+    z-index: 1;
+}
+
+.left-page {
+    width: 50%;
+    float: left;
+    height: 100%;
+    overflow: hidden;
+    background-image: url("/img/page-left.jpg");
+    background-repeat: no-repeat;
+    background-position: top right;
+    z-index: 0;
+    background-size: 100%;
+    position: absolute;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.right-page {
+    width: 50%;
+    float: left;
+    right: 0;
+    height: 100%;
+    overflow: hidden;
+    background-image: url("/img/page-right.jpg");
+    background-repeat: no-repeat;
+    background-position: top left;
+    background-size: 100%;
+    z-index: 0;
+    position: absolute;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.prev-page-btn {
+    width: 5%;
+    left: 0;
+    top: 13%;
+    height: 87%;
+    cursor: pointer;
+    z-index: 10;
+    position: absolute;
+}
+
+.next-page-btn {
+    width: 5%;
+    height: 87%;
+    top: 13%;
+    right: 0;
+    cursor: pointer;
+    z-index: 10;
+    position: absolute;
+}
+
+.photo-base {
+    height: 30%;
+    background: #fff;
+    position: absolute;
+    box-sizing: content-box;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    padding: 2% 2% 0 2%;
+    cursor: pointer;
+}
+
+.photo-base:before,
+.photo-base:after {
+    content: '';
+    position: absolute;
+    z-index: -2;
+    bottom: 15px;
+    left: 10px;
+    width: 50%;
+    height: 20%;
+    box-shadow: 0 15px 10px rgba(0, 0, 0, 0.7);
+    -webkit-transform: rotate(-3deg);
+    -moz-transform: rotate(-3deg);
+    -ms-transform: rotate(-3deg);
+    -o-transform: rotate(-3deg);
+    transform: rotate(-3deg);
+}
+
+.photo-base:after {
+    right: 10px;
+    left: auto;
+    -webkit-transform: rotate(3deg);
+    transform: rotate(3deg);
+}
+
+img {
+    height: 70%;
+    width: auto;
+}
+
+.photo-1 {
+    top: 3%;
+    left: 5%;
+}
+
+.photo-2 {
+    top: 35%;
+    right: 5%;
+}
+
+.photo-3 {
+    bottom: 3%;
+    left: 5%;
+}
+
+.photo-4 {
+    top: 3%;
+    left: 5%;
+}
+
+.photo-5 {
+    top: 35%;
+    right: 5%;
+}
+
+.photo-6 {
+    bottom: 3%;
+    left: 5%;
+}
+
+.bookmark {
+    top: 0;
+    left: 0;
+    z-index: 0;
+    cursor: pointer;
+    position: absolute;
+    background: rebeccapurple;
+    height: 13%;
+    width: 5%;
+}
+
+.upload {
+    top: 0;
+    right: 0;
+    z-index: 0;
+    cursor: pointer;
+    background: salmon;
+    position: absolute;
+    height: 13%;
+    width: 5%;
+}
+
+.menu-page {
+
+}
+
+a {
+    text-decoration: none;
+    background-color: transparent;
+    outline: none;
+}
+
+h3 {
+    color: black;
+}
+
+.upload-label {
+    height: 300px;
+    width: auto;
+}

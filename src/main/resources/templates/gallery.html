@@ -1,21 +1,118 @@
 <!DOCTYPE html>
 <html lang="en">
-<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="author" content="Aven">
     <title>Gallery</title>
-    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <link rel="shortcut icon" href="/img/cloud.ico">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/bookblock.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css"/>
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+    <script src="/js/modernizr.custom.js"></script>
+    <script src="/js/jquery.bookblock.min.js"></script>
+    <script src="/js/jquerypp.custom.js"></script>
+    <script src="/js/gallery.js"></script>
 </head>
 <body>
-<h1>This is our gallery!</h1>
-<form enctype="multipart/form-data" action="/user/photo" method="post">
-    图片<input type="file" name="file">
-    <input type="submit" value="上传">
-    <ul>
-        <li th:each="img, iterStat: ${files}">
-            <img th:src="${img}"/>
-        </li>
-    </ul>
-</form>
+<div class="container">
+    <div class="bb-custom-wrapper">
+        <div class="bookmark" onclick="bookmark()"></div>
+        <div class="prev-page-btn"></div>
+        <div id="bb-bookblock" class="bb-bookblock">
+            <div id="menu-page" class="menu-page" hidden>
+                <div class="left-page"></div>
+                <div class="right-page"></div>
+            </div>
+            <div class="bb-item">
+                <div class="left-page"></div>
+                <div class="right-page"></div>
+            </div>
+        </div>
+        <div class="next-page-btn"></div>
+        <div class="upload"><a href="/upload"></a></div>
+    </div>
+</div>
 </body>
+<script>
+    var Page = (function () {
+        var config = {
+                $bookBlock: $('#bb-bookblock'),
+                $prev: $('.prev-page-btn'),
+                $next: $('.next-page-btn'),
+                $bookmark: $('.bookmark')
+            },
+            init = function () {
+                config.$bookBlock.bookblock({
+                    speed: 800,
+                    shadowSides: 0.8,
+                    shadowFlip: 0.7,
+                    onBeforeFlip: function (page) {
+
+                        return false;
+                    },
+                    onEndFlip: function (old, page, isLimit) {
+                        // var $menuPage = $('#menu-page');
+                        // if (!$menuPage.is(':hidden')) {
+                        //     $menuPage.attr('hidden', '');
+                        //     $menuPage.removeClass('bb-item');
+                        //     config.$bookBlock.bookblock('update');
+                        // }
+                        return false;
+                    }
+                });
+                initEvents();
+            },
+            initEvents = function () {
+                var $slides = config.$bookBlock.children();
+
+                config.$prev.on('click', function () {
+                    config.$bookBlock.bookblock('prev');
+                    return false;
+                });
+
+                config.$next.on('click', function () {
+                    config.$bookBlock.bookblock('next');
+                    return false;
+                });
+
+                // config.$bookmark.on('click', function () {
+                //     config.$bookBlock.bookblock('first');
+                // });
+
+                // add swipe events
+                $slides.on({
+                    'swipeleft': function (event) {
+                        config.$bookBlock.bookblock('next');
+                        return false;
+                    },
+                    'swiperight': function (event) {
+                        config.$bookBlock.bookblock('prev');
+                        return false;
+                    }
+                });
+            }
+
+        return {init: init};
+    })();
+</script>
+<script>
+    var galleryId;
+    $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
+    $photo = $('<div class="photo-base"> <a data-fancybox="image"><img></a> <h3></h3> </div>');
+    if (galleryId) {
+        $.get("/gallery/"+galleryId, function (data, status) {
+
+        });
+    }else {
+        $.get("/gallery/", function (data, status) {
+
+        })
+    }
+
+    $(document).attr('title', '九大污云的相册');
+    Page.init();
+</script>
 </html>

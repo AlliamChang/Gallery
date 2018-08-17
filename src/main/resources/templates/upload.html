@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Title</title>
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/bookblock.css">
+    <script src="/js/exif.js"></script>
+    <script src="/js/modernizr.custom.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="/js/jquery.bookblock.min.js"></script>
+    <script src="/js/jquerypp.custom.js"></script>
+</head>
+<body>
+
+<label for="upload_file" class="upload-label" id="upload_label"></label>
+    <input id="upload_file" type="file" accept="image/*">
+<label for="upload_description">Description: </label><input id="upload_description" type="text">
+<label for="upload_original_time">Original Time: </label><input id="upload_original_time" type="text">
+<input id="upload_public" type="checkbox">Public
+</body>
+<script>
+    var fileLabel = $('#upload_label');
+    var fileInput = $('#upload_file');
+    var demoVal = $('#demo-val');
+    var oFile = new FileReader();
+    var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+    oFile.onloadend = function(oFREvent){
+
+
+        var state = oFREvent.currentTarget.readyState;
+        if (state === 2) {
+            fileLabel.css('backgroundImage', 'url(' + oFREvent.target.result + ')');
+        } else {
+
+        }
+    };
+
+    fileInput.on('change', function(e){
+        if (!e.target || !e.target.files.length || !e.target.files[0]) {return};
+
+        var _file = e.target.files[0];
+
+        if (!passFileType.test(_file.type)) {return}
+
+        oFile.readAsDataURL(_file);
+
+        EXIF.getData(_file, function(){
+            var _dataTxt = EXIF.pretty(this);
+            var _dataJson = EXIF.getAllTags(this);
+
+            // demoLog.html(_dataJson);
+            demoVal.val(_dataTxt);
+            $('#upload_original_time').val(_dataJson['DateTimeOriginal'])
+
+            // var _rotate = 0;
+            // var _orientation = EXIF.getTag(this, 'Orientation');
+
+            // if (_orientation == 3) {
+            //     _rotate = 180;
+            // } else if (_orientation == 6) {
+            //     _rotate = 90;
+            // } else if (_orientation == 8) {
+            //     _rotate = 270;
+            // }
+
+            // fileLabel.addClass('rotate-' + _rotate);
+        });
+    });
+</script>
+</html>

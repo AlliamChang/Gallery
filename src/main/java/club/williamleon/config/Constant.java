@@ -6,4 +6,7 @@ package club.williamleon.config;
 public interface Constant {
 
     String ROLE = "role";
+    String ACCOUNT = "account";
+    String PASSWORD = "passwd";
+    String EMAIL_REGEX = "^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+";
 }

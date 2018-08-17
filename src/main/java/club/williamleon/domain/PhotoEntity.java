@@ -8,25 +8,28 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "photo")
-public class Photo {
+public class PhotoEntity {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")
     private Long id;
 
-    @Column(name = "group_id")
+    @Column(name = "group_id", nullable = false)
     private Long groupId;
 
-    @Column(name = "up_id")
+    @Column(name = "up_id", nullable = false)
     private Long upId;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "up_time")
+    @Column(name = "up_time", nullable = false)
+    @Temporal(TemporalType.DATE)
     private Date upTime;
 
-    @Column(name = "origin_time")
+    @Column(name = "origin_time", nullable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date originTime;
 
     @Column(name = "description")
@@ -35,7 +38,7 @@ public class Photo {
     @Column(name = "is_public")
     private boolean isPublic;
 
-    @Column(name = "click")
+    @Column(name = "click", nullable = false)
     private Long click;
 
     public Long getId() {

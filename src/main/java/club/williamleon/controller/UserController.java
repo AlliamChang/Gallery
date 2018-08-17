@@ -1,57 +1,53 @@
 package club.williamleon.controller;
 
-import club.williamleon.model.Result;
-import club.williamleon.service.ImageService;
-import club.williamleon.util.FileUtil;
+import club.williamleon.model.RegisterUser;
+import club.williamleon.service.UserService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.Resource;
-import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.swing.text.html.parser.Entity;
-import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by 53068 on 2018/4/15 0015.
  */
 
-@Controller
+@RestController
 @RequestMapping("/user")
 public class UserController {
 
-    private final ImageService imageService;
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    public UserController(ImageService imageService) {
-        this.imageService = imageService;
-    }
+    private UserService userService;
 
-    @ResponseBody
     @PostMapping("/register")
-    public Result register() {
-
-        return null;
+    public ResponseEntity register(RegisterUser registerUser) {
+//        RegisterUser registerUser = new RegisterUser();
+//        registerUser.setPasswd(passwd);
+//        registerUser.setUsername(username);
+        userService.register(registerUser);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PostMapping("/login")
-    @ResponseBody
-    public Result login() {
-
-        return null;
+    public ResponseEntity<String> login(HttpServletRequest request) {
+        return userService.login(request);
     }
 
     @PostMapping("/logout")
-    @ResponseBody
-    public Result logout() {
-
-        return null;
+    public void logout(HttpServletRequest request, HttpServletResponse response) {
+        userService.logout(request);
+        try {
+            response.sendRedirect(request.getContextPath() + "/index");
+        } catch (IOException e) {
+            logger.error("Logout failed when try to redirect to logout page. Reason: " + e.getMessage());
+        }
     }
 
 

@@ -1,9 +1,9 @@
 package club.williamleon.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import javax.persistence.*;
 import java.util.Date;
 
 /**
@@ -11,34 +11,39 @@ import java.util.Date;
  */
 @Entity
 @Table(name = "passwd")
-public class Passwd {
+@EntityListeners(AuditingEntityListener.class)
+public class PasswdEntity {
 
     @Id
+    @Column(name = "username", length = 20)
     private String username;
 
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Column(name = "token")
     private String token;
 
     @Column(name = "latest_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
     private Date latestTime;
+
+    public PasswdEntity() {
+
+    }
+
+    public PasswdEntity(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 
     public String getUsername() {
         return username;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
     public String getPassword() {
         return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getToken() {
