@@ -2,19 +2,26 @@ package club.williamleon.service.impl;
 
 import club.williamleon.config.FileProperties;
 import club.williamleon.config.SessionParam;
+import club.williamleon.domain.CommentEntity;
+import club.williamleon.model.Comment;
 import club.williamleon.model.PhotoDetail;
 import club.williamleon.model.UploadInfo;
+import club.williamleon.repo.CommentRepo;
 import club.williamleon.repo.PhotoRepo;
 import club.williamleon.domain.PhotoEntity;
+import club.williamleon.service.GroupService;
 import club.williamleon.service.ImageService;
 import club.williamleon.util.MD5;
 import club.williamleon.util.StringUtil;
+import club.williamleon.util.val.GroupRole;
 import org.apache.tomcat.util.http.fileupload.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -27,6 +34,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -41,8 +49,15 @@ public class ImageServiceImpl implements ImageService {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private final Path rootLocation;
+
     @Autowired
     private PhotoRepo photoRepo;
+
+    @Autowired
+    private GroupService groupService;
+
+    @Autowired
+    private CommentRepo commentRepo;
 
     @Autowired
     private SessionParam sessionParam;
@@ -66,41 +81,98 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
-    public void uploadPhoto(MultipartFile photo, UploadInfo info, Long groupId) {
+    public ResponseEntity<String> uploadPhoto(MultipartFile photo, UploadInfo info, Long groupId) {
         Long userId = sessionParam.getUserId();
 
         // generate a name for photo
         String date = StringUtil.formatDate(new Date());
         String uploaderMd5 = MD5.digest("uploader");
         String filename = uploaderMd5.concat(date).concat(".").concat(info.getPhotoType());
+        // store
         if(this.store(photo, filename)){
+            Date originalTime = null;
+            try {
+                originalTime = StringUtil
+                    .parseExifDate(info.getOriginalTime());
+            } catch (ParseException e) {
+                originalTime = new Date();
+            }
             PhotoEntity entity = new PhotoEntity();
             entity.setGroupId(groupId);
             entity.setUpTime(new Date());
             entity.setUpId(userId);
+            entity.setOriginTime(originalTime);
             entity.setDescription(info.getDescription());
             entity.setClick(0L);
             entity.setName(filename);
+            photoRepo.save(entity);
+
+            if (entity.getId() != null) {
+                return new ResponseEntity<>("Upload success!", HttpStatus.OK);
+            }else {
+                return new ResponseEntity<>("Record save failed",
+                    HttpStatus.ACCEPTED);
+            }
+        }else {
+            return new ResponseEntity<>("Store failed",
+                HttpStatus.ACCEPTED);
         }
     }
 
     @Override
     @Transactional
-    public void commentPhoto(String comment) {
+    public ResponseEntity<List<Comment>> commentPhoto(Comment comment) {
+        Long userId = sessionParam.getUserId();
+        GroupRole role = groupService
+            .getRoleInGroup(userId, comment.getGroupId());
+        if (GroupRole.PASSER.equals(role)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
+        CommentEntity entity = commentRepo
+            .findByUserIdAndPhotoName(userId, comment.getPhotoName());
+        if (entity == null) {
+            entity = new CommentEntity();
+            entity.setPhotoName(comment.getPhotoName());
+            entity.setContent(comment.getComment());
+            entity.setTime(new Date());
+            entity.setUserId(userId);
+        }else {
+            entity.setTime(new Date());
+            entity.setContent(comment.getComment());
+        }
+
+        if (commentRepo.save(entity).getId() != null) {
+            List<Comment> newList = buildComment(comment.getPhotoName());
+            return new ResponseEntity<>(newList, HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>(HttpStatus.ACCEPTED);
+        }
     }
 
     @Override
-    public PhotoDetail getPhotoDetail(String photoName) {
+    public ResponseEntity<PhotoDetail> getPhotoDetail(String photoName, Long groupId) {
         Long userId = sessionParam.getUserId();
+        GroupRole role = groupService.getRoleInGroup(userId, groupId);
+        if (GroupRole.PASSER.equals(role)) {
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
 
-        return null;
+        PhotoDetail detail = new PhotoDetail();
+        PhotoEntity entity = photoRepo.findByName(photoName);
+        if (entity == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        detail.setFilename(entity.getName());
+        detail.setTitle(entity.getDescription());
+        List<Comment> comments = buildComment(photoName);
+        detail.setComments(comments);
+
+        return new ResponseEntity<>(detail, HttpStatus.OK);
     }
 
     @Override
     public Stream<Path> loadAll() {
-//        try {
-
         List<String> names = photoRepo.findPhotoNames();
         List<Path> paths = new ArrayList<>();
         if (names != null) {
@@ -154,5 +226,17 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
-
+    private List<Comment> buildComment(String photoName) {
+        List<Object[]> list = commentRepo
+            .findAllByPhotoName(photoName);
+        List<Comment> newList = new ArrayList<>();
+        for (Object[] commentEntity : list) {
+            Comment one = new Comment();
+            one.setComment((String) commentEntity[0]);
+            one.setCommentTime(StringUtil.formatDate((Date)commentEntity[1]));
+            one.setUsername((String)commentEntity[2]);
+            newList.add(one);
+        }
+        return newList;
+    }
 }

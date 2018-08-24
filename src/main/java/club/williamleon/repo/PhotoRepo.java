@@ -18,4 +18,6 @@ public interface PhotoRepo extends JpaRepository<PhotoEntity, Long> {
         " from PhotoEntity p" +
         " where p.groupId = ?1 order by p.originTime")
     List<Object[]> findPhotoInfo(Long groupId);
+
+    PhotoEntity findByName(String name);
 }

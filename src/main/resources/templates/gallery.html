@@ -100,19 +100,42 @@
 </script>
 <script>
     var galleryId;
-    $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
-    $photo = $('<div class="photo-base"> <a data-fancybox="image"><img></a> <h3></h3> </div>');
+    var title;
     if (galleryId) {
-        $.get("/gallery/"+galleryId, function (data, status) {
+        $.ajax({
+            type: 'GET',
+            url: '/gallery/'+galleryId,
+            async: false,
+            success: function (data) {
+                galleryId = data.groupId;
+                title = data.groupName;
+                $(document).attr('title', title);
+            },
+            error: function (status) {
 
-        });
+            }
+        })
     }else {
-        $.get("/gallery/", function (data, status) {
-
+        $.ajax({
+            type: 'GET',
+            url: '/gallery/',
+            async: false,
+            success: function (data) {
+                galleryId = data.groupId;
+                title = data.groupName;
+                $(document).attr('title', title);
+                console.log(data);
+                var photos = data.photos;
+                for (var i = 0; i < photos.length; i ++){
+                    loadPhoto(i, photos[i].filename, photos[i].title);
+                }
+            },
+            error: function (status) {
+                console.log(status.responseText);
+            }
         })
     }
 
-    $(document).attr('title', '九大污云的相册');
     Page.init();
 </script>
 </html>

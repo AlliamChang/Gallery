@@ -15,8 +15,8 @@ public class CommentEntity {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "photo_id", nullable = false)
-    private Long photoId;
+    @Column(name = "photo_name", nullable = false)
+    private String photoName;
 
     @Column(name = "user_id", nullable = false)
     private Long userId;
@@ -36,12 +36,12 @@ public class CommentEntity {
         this.id = id;
     }
 
-    public Long getPhotoId() {
-        return photoId;
+    public String getPhotoName() {
+        return photoName;
     }
 
-    public void setPhotoId(Long photoId) {
-        this.photoId = photoId;
+    public void setPhotoName(String photoName) {
+        this.photoName = photoName;
     }
 
     public Long getUserId() {

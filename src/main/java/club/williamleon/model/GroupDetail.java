@@ -1,6 +1,8 @@
 package club.williamleon.model;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +14,8 @@ public class GroupDetail {
 
     private String groupName;
 
+    private String roleInGroup;
+
     private boolean canAddUser;
 
     private boolean deletable;
@@ -20,8 +24,7 @@ public class GroupDetail {
 
     private boolean modifiable;
 
-    // <name, description>
-    private Map<String, String> photos = new HashMap<>();
+    private List<PhotoDetail> photos = new ArrayList<>();
 
     public Long getGroupId() {
         return groupId;
@@ -71,16 +74,26 @@ public class GroupDetail {
         this.modifiable = modifiable;
     }
 
-    public Map<String, String> getPhotos() {
+    public List<PhotoDetail> getPhotos() {
         return photos;
     }
 
-    public void setPhotos(Map<String, String> photos) {
+    public void setPhotos(List<PhotoDetail> photos) {
         this.photos = photos;
     }
 
     public void addPhoto(String name, String description) {
-        photos.put(name, description);
+        PhotoDetail photo = new PhotoDetail();
+        photo.setFilename(name);
+        photo.setTitle(description);
+        photos.add(photo);
     }
 
+    public String getRoleInGroup() {
+        return roleInGroup;
+    }
+
+    public void setRoleInGroup(String roleInGroup) {
+        this.roleInGroup = roleInGroup;
+    }
 }

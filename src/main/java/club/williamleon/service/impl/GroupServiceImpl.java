@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -129,6 +130,28 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    public Long getDefaultList() {
+        Long userId = sessionParam.getUserId();
+        List<Long> groups = groupRepo.findDefaultGroup(userId);
+        if (groups == null || groups.isEmpty()) {
+            // TODO
+            return null;
+        }else {
+            return groups.get(0);
+        }
+    }
+
+    @Override
+    public GroupRole getRoleInGroup(Long userId, Long groupId) {
+        UserInGroupEntity role = userInGroupRepo.findByUserIdAndGroupId(userId, groupId);
+        if (role == null) {
+            return GroupRole.PASSER;
+        }
+
+        return role.getRole();
+    }
+
+    @Override
     public ResponseEntity<GroupDetail> enterGroup(Long groupId) {
         Long userId = sessionParam.getUserId();
         UserInGroupEntity userInGroup = new UserInGroupEntity();
@@ -137,18 +160,27 @@ public class GroupServiceImpl implements GroupService {
         Optional<UserInGroupEntity> roleInGroup = userInGroupRepo
             .findOne(Example.of(userInGroup));
         if (roleInGroup.isPresent()) {
-            GroupEntity group = new GroupEntity();
-            List<Object[]> photos = photoRepo.findPhotoInfo(groupId);
+            GroupEntity group = groupRepo.findById(groupId).get();
             GroupDetail detail = new GroupDetail();
-            for (Object[] photo : photos) {
-                detail.addPhoto((String) photo[0], (String) photo[1]);
-            }
+            detail.setGroupName(group.getName());
+            detail.setGroupId(groupId);
+            List<Object[]> photos = photoRepo.findPhotoInfo(groupId);
             if (GroupRole.PASSER.equals(roleInGroup.get().getRole())) {
-
+                if(group.isPublic()){
+                    for (Object[] photo : photos) {
+                        detail.addPhoto((String) photo[0], "");
+                    }
+                }else {
+                    return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+                }
+            }else {
+                for (Object[] photo : photos) {
+                    detail.addPhoto((String) photo[0], (String) photo[1]);
+                }
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(detail, HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
 }

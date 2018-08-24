@@ -1,11 +1,14 @@
 package club.williamleon.service;
 
+import club.williamleon.model.Comment;
 import club.williamleon.model.PhotoDetail;
 import club.williamleon.model.UploadInfo;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.nio.file.Path;
+import java.util.List;
 import java.util.stream.Stream;
 
 /**
@@ -21,11 +24,11 @@ public interface ImageService {
 
     Path load(String filename);
 
-    void uploadPhoto(MultipartFile photo, UploadInfo info, Long id);
+    ResponseEntity<String> uploadPhoto(MultipartFile photo, UploadInfo info, Long id);
 
-    void commentPhoto(String comment);
+    ResponseEntity<List<Comment>> commentPhoto(Comment comment);
 
-    PhotoDetail getPhotoDetail(String photoName);
+    ResponseEntity<PhotoDetail> getPhotoDetail(String photoName, Long groupId);
 
 //    void getPhotosByGroup();
 }

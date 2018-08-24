@@ -1,7 +1,5 @@
 package club.williamleon.model;
 
-import club.williamleon.domain.CommentEntity;
-
 import java.util.List;
 
 /**
@@ -11,7 +9,7 @@ public class PhotoDetail {
 
     private String filename;
     private String title;
-    private List<CommentEntity> comments;
+    private List<Comment> comments;
 
     public String getFilename() {
         return filename;
@@ -29,11 +27,11 @@ public class PhotoDetail {
         this.title = title;
     }
 
-    public List<CommentEntity> getComments() {
+    public List<Comment> getComments() {
         return comments;
     }
 
-    public void setComments(List<CommentEntity> comments) {
+    public void setComments(List<Comment> comments) {
         this.comments = comments;
     }
 }

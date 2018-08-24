@@ -33,7 +33,6 @@ public class MD5 {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("UnsupportedEncodingException", e);
         }
-        System.out.println();
 
         StringBuilder hex = new StringBuilder(hash.length * 2);
         for (byte b : hash) {

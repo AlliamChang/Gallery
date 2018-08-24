@@ -1,7 +1,5 @@
 package club.williamleon.util;
 
-import club.williamleon.config.Constant;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,8 +15,13 @@ public class StringUtil {
     private final static DateFormat format = new SimpleDateFormat(
         "yyyyMMddhhmmss");
 
+    private final static DateFormat formatExif = new SimpleDateFormat(
+        "yyyy:MM:dd hh:mm:ss");
+
+    private final static String EMAIL_REGEX = "^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+";
+
     public static boolean isEmail(String str) {
-        Pattern p = Pattern.compile(Constant.EMAIL_REGEX);
+        Pattern p = Pattern.compile(EMAIL_REGEX);
         Matcher m = p.matcher(str);
         return m.matches();
     }
@@ -27,11 +30,11 @@ public class StringUtil {
         return format.format(date);
     }
 
-    public static Date parseDate(String date) {
-        try {
-            return format.parse(date);
-        } catch (ParseException e) {
-            return null;
-        }
+    public static Date parseDate(String date) throws ParseException {
+        return format.parse(date);
+    }
+
+    public static Date parseExifDate(String date) throws ParseException {
+        return formatExif.parse(date);
     }
 }

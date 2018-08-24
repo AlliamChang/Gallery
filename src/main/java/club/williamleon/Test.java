@@ -34,7 +34,8 @@ public class Test {
     private static DateFormat format = new SimpleDateFormat("yyyyMMdd");
     public static void todayMD5() {
         String user = "Mweprfre";
-        String password = "77gheMjuo//*(mb";
+        String password = "98gheMjuo//*(ma";
+        String token = "53770416-4e03-4c4e-89a6-c8dcb2301910";
         String todayDate = format.format(new Date());
         System.out.println(todayDate);
         String md5 = MD5.digest(user + password + todayDate);

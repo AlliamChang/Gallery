@@ -42,8 +42,11 @@ public class GalleryController {
 
     @GetMapping("/")
     public ResponseEntity getDefaultGallery() {
-
-        return this.getGalleryPhotos(1L);
+        Long defaultGroup = groupService.getDefaultList();
+        if (defaultGroup == null || defaultGroup <= 0) {
+            // TODO
+        }
+        return this.getGalleryPhotos(defaultGroup);
     }
 
     @PostMapping("/")
@@ -74,7 +77,7 @@ public class GalleryController {
     public ResponseEntity<GroupDetail> getGalleryPhotos(@PathVariable Long id) {
         ResponseEntity<GroupDetail> groupDetail = groupService.enterGroup(id);
         
-        return new ResponseEntity<>(HttpStatus.OK);
+        return groupDetail;
     }
 
     @GetMapping("/photo/{filename}")
@@ -83,13 +86,18 @@ public class GalleryController {
         return null;
     }
 
+    @GetMapping("/{id}/role")
+    public ResponseEntity getRole() {
+
+        return null;
+    }
+
     @PostMapping("/{id}/photo")
     public ResponseEntity uploadPhoto(@PathVariable Long id,
         @RequestParam("file") MultipartFile file,
         UploadInfo info) {
-        imageService.uploadPhoto(file, info, id);
 
-        return null;
+        return imageService.uploadPhoto(file, info, id);
     }
 
     @DeleteMapping("/{id}")
