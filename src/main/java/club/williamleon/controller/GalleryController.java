@@ -1,6 +1,5 @@
 package club.williamleon.controller;
 
-import club.williamleon.config.SessionParam;
 import club.williamleon.model.GroupDetail;
 import club.williamleon.model.GroupInfo;
 import club.williamleon.model.InviteUser;
@@ -15,10 +14,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by 53068 on 2018/5/16 0016.

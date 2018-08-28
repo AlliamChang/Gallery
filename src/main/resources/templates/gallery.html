@@ -112,7 +112,7 @@
                 $(document).attr('title', title);
             },
             error: function (status) {
-
+                handleError(status);
             }
         })
     }else {
@@ -131,6 +131,7 @@
                 }
             },
             error: function (status) {
+                handleError(status);
                 console.log(status.responseText);
             }
         })

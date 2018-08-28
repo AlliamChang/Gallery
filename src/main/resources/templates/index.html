@@ -6,13 +6,19 @@
     <title>Gallery</title>
     <link rel="shortcut icon" href="/img/cloud.ico">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/gallery.js"></script>
 </head>
 <body>
+<h3></h3>
 <label for="account">Account: </label><input type="text" id="account" placeholder="Email/Username">
 <label for="password">Password: </label><input type="password" id="password">
 <button id="login">Login</button>
 </body>
 <script>
+    if (document.cookie.indexOf("error=") > -1) {
+        $('h3').text(getCookie('error'));
+        delCookie('error');
+    }
     $(document).ready(function () {
         $('#login').on('click', function () {
             $.ajax({
@@ -30,6 +36,6 @@
                 }
             })
         })
-    })
+    });
 </script>
 </html>

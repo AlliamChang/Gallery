@@ -31,8 +31,7 @@ public class UserController {
 //        RegisterUser registerUser = new RegisterUser();
 //        registerUser.setPasswd(passwd);
 //        registerUser.setUsername(username);
-        userService.register(registerUser);
-        return new ResponseEntity(HttpStatus.OK);
+        return userService.register(registerUser);
     }
 
     @PostMapping("/login")

@@ -12,7 +12,7 @@ public interface UserService {
 
     ResponseEntity login(HttpServletRequest request);
 
-    void register(RegisterUser registerUser);
+    ResponseEntity<String> register(RegisterUser registerUser);
 
     void logout(HttpServletRequest request);
 

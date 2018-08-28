@@ -113,18 +113,25 @@ public class UserServiceImpl implements UserService {
 
     @Transactional
     @Override
-    public void register(RegisterUser registerUser) {
+    public ResponseEntity<String> register(RegisterUser registerUser) {
         UserEntity userEntity = new UserEntity();
         userEntity.setUsername(registerUser.getUsername());
+        userEntity.setNickname(registerUser.getUsername());
+        String md5Passwd = MD5.encrypt(registerUser.getPasswd());
         PasswdEntity passwdEntity = new PasswdEntity(registerUser.getUsername(),
-            registerUser.getPasswd());
+            md5Passwd);
 
-        userRepo.save(userEntity);
-        passwdRepo.save(passwdEntity);
+        if (!userRepo.existsByUsername(registerUser.getUsername())) {
+            userRepo.save(userEntity);
+            passwdRepo.save(passwdEntity);
+            return new ResponseEntity<>("Register success", HttpStatus.OK);
+        }else {
+            return new ResponseEntity<>("username is existed", HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Override
     public void bindEmail() {
-
+        // TODO future feature
     }
 }

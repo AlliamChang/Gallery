@@ -10,4 +10,6 @@ public interface UserRepo extends JpaRepository<UserEntity, Long> {
 
     @Query("select u.id from UserEntity u where u.username = ?1")
     Long findIdByUsername(String username);
+
+    boolean existsByUsername(String username);
 }
