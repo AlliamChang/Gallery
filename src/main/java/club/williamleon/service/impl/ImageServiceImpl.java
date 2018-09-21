@@ -83,9 +83,15 @@ public class ImageServiceImpl implements ImageService {
         Long userId = sessionParam.getUserId();
 
         // generate a name for photo
+        String filename = photo.getOriginalFilename();
+        String[] temp= filename.split("\\.");
+        String photoType = temp[temp.length - 1];
+        if (!"jpg".equals(photoType)) {
+            // TODO check the type of file
+        }
         String date = StringUtil.formatDate(new Date());
         String uploaderMd5 = MD5.digest("uploader");
-        String filename = uploaderMd5.concat(date).concat(".").concat(info.getPhotoType());
+        filename = uploaderMd5.concat(date).concat(".").concat(photoType);
         // store
         if(this.store(photo, filename)){
             Date originalTime = null;

@@ -29,6 +29,10 @@ function handleError(status) {
     }
 }
 
+function setCookie(cname, cval) {
+    document.cookie = cname + "=" + cval;
+}
+
 function getCookie(cname) {
     var name = cname + "=";
     var ca = document.cookie.split(';');

@@ -88,7 +88,7 @@ public class GalleryController {
     }
 
     @PostMapping("/{id}/photo")
-    public ResponseEntity uploadPhoto(@PathVariable Long id,
+    public ResponseEntity<?> uploadPhoto(@PathVariable Long id,
         @RequestParam("file") MultipartFile file,
         UploadInfo info) {
 

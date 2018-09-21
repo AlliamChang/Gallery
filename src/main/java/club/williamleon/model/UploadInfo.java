@@ -5,8 +5,6 @@ package club.williamleon.model;
  */
 public class UploadInfo {
 
-    private String photoType;
-
     private String description;
 
     private String originalTime;
@@ -27,11 +25,4 @@ public class UploadInfo {
         this.originalTime = originalTime;
     }
 
-    public String getPhotoType() {
-        return photoType;
-    }
-
-    public void setPhotoType(String photoType) {
-        this.photoType = photoType;
-    }
 }

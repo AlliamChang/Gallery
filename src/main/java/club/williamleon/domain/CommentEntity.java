@@ -25,7 +25,7 @@ public class CommentEntity {
     private String content;
 
     @Column(name = "time", nullable = false)
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date time;
 
     public Long getId() {

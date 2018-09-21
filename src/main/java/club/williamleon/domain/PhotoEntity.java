@@ -25,7 +25,7 @@ public class PhotoEntity {
     private String name;
 
     @Column(name = "up_time", nullable = false)
-    @Temporal(TemporalType.TIME)
+    @Temporal(TemporalType.TIMESTAMP)
     private Date upTime;
 
     @Column(name = "origin_time", nullable = false)

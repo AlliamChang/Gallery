@@ -99,7 +99,7 @@
     })();
 </script>
 <script>
-    var galleryId;
+    var galleryId = getCookie('gallery');
     var title;
     if (galleryId) {
         $.ajax({
@@ -107,12 +107,17 @@
             url: '/gallery/'+galleryId,
             async: false,
             success: function (data) {
-                galleryId = data.groupId;
                 title = data.groupName;
                 $(document).attr('title', title);
+                console.log(data);
+                var photos = data.photos;
+                for (var i = 0; i < photos.length; i ++){
+                    loadPhoto(i, photos[i].filename, photos[i].title);
+                }
             },
             error: function (status) {
                 handleError(status);
+                console.log(status.responseText);
             }
         })
     }else {
@@ -121,7 +126,7 @@
             url: '/gallery/',
             async: false,
             success: function (data) {
-                galleryId = data.groupId;
+                setCookie('gallery', data.groupId);
                 title = data.groupName;
                 $(document).attr('title', title);
                 console.log(data);
