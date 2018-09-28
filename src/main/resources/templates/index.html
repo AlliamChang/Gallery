@@ -10,9 +10,11 @@
 </head>
 <body>
 <h3></h3>
-<label for="account">Account: </label><input type="text" id="account" placeholder="Email/Username">
-<label for="password">Password: </label><input type="password" id="password">
-<button id="login">Login</button>
+<form>
+    <label for="account">Account: </label><input type="text" id="account" placeholder="Email/Username">
+    <label for="password">Password: </label><input type="password" id="password">
+    <button id="login">Login</button>
+</form>
 </body>
 <script>
     if (document.cookie.indexOf("error=") > -1) {
@@ -29,7 +31,7 @@
                 success: function (data) {
                     alert(data);
                     document.cookie = "token=" + data + "; path=/";
-                    window.location.href = "/test";
+                    window.location.href = "/browse";
                 },
                 error: function (status) {
                     console.log(status.responseText);

@@ -7,10 +7,13 @@
     <link rel="shortcut icon" href="/img/cloud.ico">
     <link rel="stylesheet" href="/css/base.css">
     <link rel="stylesheet" href="/css/bookblock.css">
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css"/>
+    <link rel="stylesheet" href="/css/fancybox.custom.css">
+    <!--<link rel="stylesheet"-->
+    <!--href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css"/>-->
+    <link rel="stylesheet" href="/css/jquery.fancybox.min.css">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>
+    <script src="/js/jquery.fancybox.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>-->
     <script src="/js/modernizr.custom.js"></script>
     <script src="/js/jquery.bookblock.min.js"></script>
     <script src="/js/jquerypp.custom.js"></script>
@@ -104,14 +107,14 @@
     if (galleryId) {
         $.ajax({
             type: 'GET',
-            url: '/gallery/'+galleryId,
+            url: '/gallery/' + galleryId,
             async: false,
             success: function (data) {
                 title = data.groupName;
                 $(document).attr('title', title);
                 console.log(data);
                 var photos = data.photos;
-                for (var i = 0; i < photos.length; i ++){
+                for (var i = 0; i < photos.length; i++) {
                     loadPhoto(i, photos[i].filename, photos[i].title);
                 }
             },
@@ -120,7 +123,7 @@
                 console.log(status.responseText);
             }
         })
-    }else {
+    } else {
         $.ajax({
             type: 'GET',
             url: '/gallery/',
@@ -131,7 +134,7 @@
                 $(document).attr('title', title);
                 console.log(data);
                 var photos = data.photos;
-                for (var i = 0; i < photos.length; i ++){
+                for (var i = 0; i < photos.length; i++) {
                     loadPhoto(i, photos[i].filename, photos[i].title);
                 }
             },
@@ -143,5 +146,134 @@
     }
 
     Page.init();
+</script>
+<script>
+    $(function () {
+        /*
+
+            Creative example - Customized layout
+            ====================================
+
+        */
+
+        $('[data-fancybox="image"]').fancybox({
+            baseClass: 'fancybox-custom-layout',
+            infobar: false,
+            thumbs: {
+                hideOnClose: false
+            },
+            touch: {
+                vertical: false
+            },
+            buttons: [
+                'close'
+            ],
+            animationEffect: "fade",
+            transitionEffect: false,
+            idleTime: false,
+            gutter: 0,
+            // Customize caption area
+            caption: function (instance) {
+                return '<h3>home</h3><p>interiors, exteriors, and the humans that inhabit them.</p><p><a href="https://unsplash.com/collections/curated/162" target="_blank">unsplash.com</a></p>';
+            },
+            afterShow: function (instance) {
+                instance.$refs.container.find('.fancybox-caption')
+                    .html('<h3>' + instance.currIndex + '</h3>');
+            }
+        });
+
+
+        /*
+
+		Creative example - Product quick view
+	    =====================================
+
+	*/
+
+        // $('[data-fancybox="image"]').fancybox({
+        //     baseClass: 'quick-view-container',
+        //     infobar: false,
+        //     buttons: ["close"],
+        //     arrows: true,
+        //     thumbs: false,
+        //     margin: 0,
+        //     touch: {
+        //         vertical: false
+        //     },
+        //     animationEffect: false,
+        //     transitionEffect: "slide",
+        //     transitionDuration: 500,
+        //     baseTpl: '<div class="fancybox-container" role="dialog">' +
+        //     '<div class="quick-view-content">' +
+        //     '<div class="quick-view-carousel">' +
+        //     '<div class="fancybox-stage"></div>' +
+        //     '</div>' +
+        //     '<div class="quick-view-aside"></div>' +
+        //     '<div class="fancybox-navigation"><button data-fancybox-prev="" class="fancybox-button fancybox-button--arrow_left" title="Previous" disabled=""><div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M11.28 15.7l-1.34 1.37L5 12l4.94-5.07 1.34 1.38-2.68 2.72H19v1.94H8.6z"></path></svg></div></button><button data-fancybox-next="" class="fancybox-button fancybox-button--arrow_right" title="Next"><div><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M15.4 12.97l-2.68 2.72 1.34 1.38L19 12l-4.94-5.07-1.34 1.38 2.68 2.72H5v1.94z"></path></svg></div></button></div> ' +
+        //     '<button data-fancybox-close class="quick-view-close">X</button>' +
+        //     '</div>' +
+        //     '</div>',
+        //
+        //     onInit: function (instance) {
+        //
+        //         /*
+        //
+        //             #1 Create bullet navigation links
+        //             =================================
+        //
+        //         */
+        //
+        //         var bullets = '<ul class="quick-view-bullets">';
+        //
+        //         for (var i = 0; i < instance.group.length; i++) {
+        //             bullets += '<li><a data-index="' + i + '" href="javascript:;"><span>' + (i + 1) + '</span></a></li>';
+        //         }
+        //
+        //         bullets += '</ul>';
+        //
+        //         $(bullets).on('click touchstart', 'a', function () {
+        //             var index = $(this).data('index');
+        //
+        //             $.fancybox.getInstance(function () {
+        //                 this.jumpTo(index);
+        //             });
+        //
+        //         })
+        //             .appendTo(instance.$refs.container.find('.quick-view-carousel'));
+        //
+        //
+        //         /*
+        //
+        //             #2 Add product form
+        //             ===================
+        //
+        //         */
+        //
+        //         var $element = instance.group[instance.currIndex].opts.$orig;
+        //         var form_id = $element.data('qw-form');
+        //
+        //         instance.$refs.container.find('.quick-view-aside').append(
+        //             // In this example, this element contains the form
+        //             $('#' + form_id).clone(true).removeClass('hidden')
+        //         );
+        //
+        //     },
+        //
+        //     beforeShow: function (instance) {
+        //
+        //         /*
+        //             Mark current bullet navigation link as active
+        //         */
+        //
+        //         instance.$refs.container.find('.quick-view-bullets')
+        //             .children()
+        //             .removeClass('active')
+        //             .eq(instance.currIndex)
+        //             .addClass('active');
+        //
+        //     }
+        //
+        // });
+    })
 </script>
 </html>
