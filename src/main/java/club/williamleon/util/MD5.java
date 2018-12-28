@@ -61,7 +61,8 @@ public class MD5 {
 
     public static boolean equal(@NotNull String rawMsg, String md5){
         if(rawMsg == null || rawMsg.equals("")){
-            throw new RuntimeException("");
+//            throw new RuntimeException("");
+            return false;
         }
 
         int m = rawMsg.charAt(0) % 4;

@@ -5,16 +5,30 @@
     <meta name="author" content="Aven">
     <title>Gallery</title>
     <link rel="shortcut icon" href="/img/cloud.ico">
+    <link rel="stylesheet" href="/css/base.css">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/gallery.js"></script>
 </head>
 <body>
-<h3></h3>
-<form>
-    <label for="account">Account: </label><input type="text" id="account" placeholder="Email/Username">
-    <label for="password">Password: </label><input type="password" id="password">
-    <button id="login">Login</button>
-</form>
+<div class="container">
+    <div class="bb-custom-wrapper desk">
+        <div class="desk-page">
+            <form class="login-form">
+                <h3 id="loginMsg"></h3>
+                <label for="account">&nbsp&nbsp&nbspAccount: </label><input type="text" id="account" placeholder="Email/Username">
+                <br>
+                <label for="password">Password: </label><input type="password" id="password">
+                <br>
+                <button id="login">Login</button>
+                <a class="link" href="" style="font-size: 13px">forget password?</a>
+            </form>
+            <div class="copyright">Copyright © AvenChang |&nbsp<a class="link" href="http://www.miibeian.gov.cn/">粤ICP备17090921号-2</a></div>
+        </div>
+        <div class="cover-page">
+            <label>abc</label>
+        </div>
+    </div>
+</div>
 </body>
 <script>
     if (document.cookie.indexOf("error=") > -1) {
@@ -27,7 +41,10 @@
                 type: "POST",
                 url: "/user/login",
                 async: false,
-                data: {account: $('#account').val(), passwd: $('#password').val()},
+                data: {
+                    account: $('#account').val(),
+                    passwd: $('#password').val()
+                },
                 success: function (data) {
                     alert(data);
                     document.cookie = "token=" + data + "; path=/";

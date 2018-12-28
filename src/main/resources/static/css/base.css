@@ -1,14 +1,21 @@
 body {
-    font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei";
+    font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", serif;
+    margin: 0;
 }
 
 .container {
     height: 100%;
+    margin: 0;
+    padding: 0;
 }
 
 .bb-custom-wrapper {
     width: 100%;
     height: 100%;
+    z-index: 0;
+    /*4:3*/
+    min-width: 800px;
+    min-height: 600px;
     position: absolute;
 }
 
@@ -31,16 +38,40 @@ body {
     z-index: 1;
 }
 
+.desk-page {
+    width: 50%;
+    height: 100%;
+    float: left;
+    position: absolute;
+}
+
+.cover-page {
+    width: 50%;
+    height: 100%;
+    right: 0;
+    float: left;
+    background: #1da1f2;
+    position: absolute;
+}
+
+.login-form {
+    width: 50%;
+    height: 45%;
+    background-color: #bd081d;
+    right: 25%;
+    top: 27%;
+    position: absolute;
+    align-content: center;
+}
+
 .left-page {
     width: 50%;
     float: left;
     height: 100%;
     overflow: hidden;
-    background-image: url("/img/page-left.jpg");
-    background-repeat: no-repeat;
-    background-position: top right;
+    background: url("/img/page-left-1.jpg") no-repeat top right;
     z-index: 0;
-    background-size: 100%;
+    background-size: cover;
     position: absolute;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
@@ -51,10 +82,8 @@ body {
     right: 0;
     height: 100%;
     overflow: hidden;
-    background-image: url("/img/page-right.jpg");
-    background-repeat: no-repeat;
-    background-position: top left;
-    background-size: 100%;
+    background: url("/img/page-right-1.jpg") no-repeat top left;
+    background-size: cover;
     z-index: 0;
     position: absolute;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
@@ -120,34 +149,35 @@ img {
 }
 
 .photo-1 {
-    top: 3%;
-    left: 5%;
+    top: 5%;
+    left: 8%;
 }
 
 .photo-2 {
     top: 35%;
-    right: 5%;
+    right: 8%;
 }
 
 .photo-3 {
-    bottom: 3%;
-    left: 5%;
+    bottom: 5%;
+    left: 8%;
 }
 
 .photo-4 {
-    top: 3%;
-    left: 5%;
+    top: 5%;
+    left: 8%;
 }
 
 .photo-5 {
     top: 35%;
-    right: 5%;
+    right: 8%;
 }
 
 .photo-6 {
-    bottom: 3%;
-    left: 5%;
+    bottom: 5%;
+    left: 8%;
 }
+
 
 .bookmark {
     top: 0;
@@ -171,14 +201,41 @@ img {
     width: 5%;
 }
 
+.upload a {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
 .menu-page {
 
+}
+
+.copyright {
+    bottom: 5px;
+    left: 0;
+    width: 100%;
+    min-height: 20px;
+    position: absolute;
+    text-align: center;
+    font-size: 14px;
 }
 
 a {
     text-decoration: none;
     background-color: transparent;
     outline: none;
+}
+
+a.link{
+    border-bottom: 1px solid #999;
+    color: #555;
+}
+
+a.link:hover {
+    color: black;
 }
 
 h3 {
@@ -188,4 +245,76 @@ h3 {
 .upload-label {
     height: 300px;
     width: auto;
+}
+
+.desk {
+    background: url("/img/cover-desk.jpg") round;
+}
+
+.upload-cover {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0,0,0,0.4);
+    display: none;
+    z-index: 1;
+}
+
+.upload-form {
+    height: 350px;
+    width: 600px;
+    background-color: #fff;
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    display: none;
+}
+
+.upload-file {
+    top: 25px;
+    left: 25px;
+    position: absolute;
+    height: 300px;
+    width: 300px;
+}
+
+.upload-file label {
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    display: block;
+    background: #f4f7fc no-repeat center;
+    background-size: contain;
+    color: #999999;
+    z-index: 1;
+}
+
+.upload-file label:before {
+    content: '选择上传照片';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 100%;
+    margin-top: -1rem;
+    font-size: 20px;
+    text-align: center;
+}
+
+.upload-file label.set:before{
+    display: none;
+}
+
+.upload-file input {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
 }

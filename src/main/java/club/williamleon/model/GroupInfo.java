@@ -13,6 +13,8 @@ public class GroupInfo {
 
     private boolean isPublic;
 
+    private String cover;
+
     public Long getId() {
         return id;
     }

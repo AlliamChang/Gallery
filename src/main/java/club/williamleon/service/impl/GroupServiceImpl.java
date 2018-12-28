@@ -21,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,7 +80,7 @@ public class GroupServiceImpl implements GroupService {
         Long userId = sessionParam.getUserId();
         UserInGroupEntity entity = userInGroupRepo.findByUserId(userId);
         if (GroupRole.CREATOR.equals(entity.getRole())) {
-            // TODO
+            // TODO creator can't leave
             return;
         }
 
@@ -95,7 +96,7 @@ public class GroupServiceImpl implements GroupService {
         Long inviterId = sessionParam.getUserId();
         Long groupId = inviteUser.getGroupId();
         if (groupId == null) {
-            // TODO
+            // TODO defensive programming
             return;
         }
         Long inviteUserId = userRepo.findIdByUsername(inviteUser.getUsername());
@@ -106,7 +107,7 @@ public class GroupServiceImpl implements GroupService {
 
         UserInGroupEntity inviter = userInGroupRepo.findByUserId(inviterId);
         if (!inviter.getRole().isAddUser()) {
-            // TODO
+            // TODO limited authority
             return;
         }
 
@@ -125,7 +126,12 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public List<GroupInfo> getGroupList() {
-        return null;
+        Long userId = sessionParam.getUserId();
+        List<GroupInfo> groups = new ArrayList<>();
+        if (userId != null) {
+
+        }
+        return groups;
     }
 
     @Override
@@ -133,7 +139,7 @@ public class GroupServiceImpl implements GroupService {
         Long userId = sessionParam.getUserId();
         List<Long> groups = groupRepo.findDefaultGroup(userId);
         if (groups == null || groups.isEmpty()) {
-            // TODO
+            // TODO join no groups yet
             return null;
         }else {
             return groups.get(0);

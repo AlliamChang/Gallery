@@ -4,8 +4,10 @@ import club.williamleon.util.MD5;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
@@ -23,10 +25,11 @@ public class Test {
 //        List<String> test = Arrays.asList("1", "2", "3");
 //        System.out.println(StringUtils.collectionToDelimitedString(test, ",", "'", "'"));
 
-        long timestamp = LocalDateTime.parse("2018-08-13T11:11:11")
-            .toEpochSecond(ZoneOffset.UTC);
-        Date d = new Date(1534158671);
-        System.out.println(System.currentTimeMillis());
+        List<String> test = new ArrayList<>();
+        test.add(null);
+        LocalDateTime date = LocalDateTime.of(2017, 2, 13, 0, 0);
+        date = date.plusMonths(1).minusDays(13);
+        System.out.print("\n\nasda\r\nasdf\r\n\r\n".replaceAll("(^([\r\n])*)|(([\r\n])*$)", "1"));
     }
 
     private static DateFormat format = new SimpleDateFormat("yyyyMMdd");

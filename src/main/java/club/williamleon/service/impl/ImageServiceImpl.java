@@ -189,7 +189,6 @@ public class ImageServiceImpl implements ImageService {
 //                    .filter(path -> !path.equals(this.rootLocation))
 //                    .map(this.rootLocation::relativize);
 //        } catch (IOException e) {
-////            TODO: throw new
 //            System.out.println("load fail");
 //            return null;
 //        }
@@ -239,6 +238,7 @@ public class ImageServiceImpl implements ImageService {
             one.setComment((String) commentEntity[0]);
             one.setCommentTime(StringUtil.formatDate((Date)commentEntity[1]));
             one.setUsername((String)commentEntity[2]);
+            one.setPhotoName((String)commentEntity[3]);
             newList.add(one);
         }
         return newList;

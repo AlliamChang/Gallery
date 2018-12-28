@@ -13,6 +13,7 @@
     <link rel="stylesheet" href="/css/jquery.fancybox.min.css">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/jquery.fancybox.min.js"></script>
+    <script src="/js/exif.js"></script>
     <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.js"></script>-->
     <script src="/js/modernizr.custom.js"></script>
     <script src="/js/jquery.bookblock.min.js"></script>
@@ -22,7 +23,7 @@
 <body>
 <div class="container">
     <div class="bb-custom-wrapper">
-        <div class="bookmark" onclick="bookmark()"></div>
+        <div class="bookmark"></div>
         <div class="prev-page-btn"></div>
         <div id="bb-bookblock" class="bb-bookblock">
             <div id="menu-page" class="menu-page" hidden>
@@ -35,7 +36,23 @@
             </div>
         </div>
         <div class="next-page-btn"></div>
-        <div class="upload"><a href="/upload"></a></div>
+        <div class="upload">
+            <a onclick="showUpload()">
+                <img src="">
+            </a>
+        </div>
+    </div>
+    <div class="upload-cover"></div>
+    <div class="upload-form">
+        <div class="upload-file">
+            <label for="upload_file" id="upload_label"></label>
+            <input id="upload_file" type="file" accept="image/*">
+        </div>
+        <label for="upload_description">Description: </label><input id="upload_description" type="text" maxlength="10">
+        <label for="upload_original_time">Original Time: </label><input id="upload_original_time" type="text" contenteditable="false">
+        <input id="upload_public" type="checkbox">Public
+        <button onclick="hideUpload()">Upload</button>
+        <button onclick="hideUpload()">X</button>
     </div>
 </div>
 </body>
@@ -96,7 +113,7 @@
                         return false;
                     }
                 });
-            }
+            };
 
         return {init: init};
     })();
@@ -149,6 +166,11 @@
 </script>
 <script>
     $(function () {
+
+        $('.upload-cover').click(function () {
+            hideUpload();
+        });
+
         /*
 
             Creative example - Customized layout
@@ -174,14 +196,88 @@
             gutter: 0,
             // Customize caption area
             caption: function (instance) {
-                return '<h3>home</h3><p>interiors, exteriors, and the humans that inhabit them.</p><p><a href="https://unsplash.com/collections/curated/162" target="_blank">unsplash.com</a></p>';
+                return '<h3>  </h3>';
+                // return '<h3>home</h3><p>interiors, exteriors, and the humans that inhabit them.</p><p><a href="https://unsplash.com/collections/curated/162" target="_blank">unsplash.com</a></p>';
             },
-            afterShow: function (instance) {
-                instance.$refs.container.find('.fancybox-caption')
-                    .html('<h3>' + instance.currIndex + '</h3>');
+            afterShow: function (instance, slide) {
+                var file = instance.current['src'].split('/')[2];
+                $.ajax({
+                    type: 'GET',
+                    url: '/gallery/photo/' + file + '?group=' + galleryId,
+                    success: function (data) {
+                        var comments = '<h3>' + data.title + '</h3>';
+                        if(data.comments.length > 0){
+                            comments += '<div class="fancybox-comments">';
+                            data.comments.forEach(function (c) {
+                                comments += '<p><strong>'+c.username+'  </strong>'
+                                    + c.comment+'</p>';
+                            });
+                            comments += '</div>';
+                        }else {
+
+                        }
+                        comments += '<div class="fancybox-up">' +
+                            '   <input id="comment"><button id="commentBtn" onclick="uploadComment()">评论</button>' +
+                            '</div>';
+                        instance.$refs.container.find('.fancybox-caption')
+                            .html(comments);
+                    },
+                    error: function (status) {
+                        handleError(status);
+                        console.log(status.responseText);
+                    }
+                })
             }
         });
 
+        var fileLabel = $('#upload_label');
+        var fileInput = $('#upload_file');
+        var demoVal = $('#demo-val');
+        var oFile = new FileReader();
+        var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
+
+        oFile.onloadend = function(oFREvent){
+
+
+            var state = oFREvent.currentTarget.readyState;
+            if (state === 2) {
+                fileLabel.addClass('set').css('backgroundImage', 'url(' + oFREvent.target.result + ')');
+            } else {
+
+            }
+        };
+
+        fileInput.on('change', function(e){
+            if (!e.target || !e.target.files.length || !e.target.files[0]) {return}
+
+            var _file = e.target.files[0];
+
+            if (!passFileType.test(_file.type)) {return}
+
+            oFile.readAsDataURL(_file);
+
+            EXIF.getData(_file, function(){
+                var _dataTxt = EXIF.pretty(this);
+                var _dataJson = EXIF.getAllTags(this);
+
+                // demoLog.html(_dataJson);
+                demoVal.val(_dataTxt);
+                $('#upload_original_time').val(_dataJson['DateTimeOriginal'])
+
+                // var _rotate = 0;
+                // var _orientation = EXIF.getTag(this, 'Orientation');
+
+                // if (_orientation == 3) {
+                //     _rotate = 180;
+                // } else if (_orientation == 6) {
+                //     _rotate = 90;
+                // } else if (_orientation == 8) {
+                //     _rotate = 270;
+                // }
+
+                // fileLabel.addClass('rotate-' + _rotate);
+            });
+        });
 
         /*
 

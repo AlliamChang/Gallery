@@ -1,10 +1,10 @@
 ;
-function bookmark() {
-    $('#menu-page').removeAttr('hidden');
-    $('#menu-page').addClass('bb-item');
-    $('#bb-bookblock').bookblock('update');
-    $('#bb-bookblock').bookblock('first');
-}
+// function bookmark() {
+//     $('#menu-page').removeAttr('hidden');
+//     $('#menu-page').addClass('bb-item');
+//     $('#bb-bookblock').bookblock('update');
+//     $('#bb-bookblock').bookblock('first');
+// }
 
 function loadPhoto(i, filename, title) {
     $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
@@ -21,6 +21,7 @@ function loadPhoto(i, filename, title) {
         $($(".bb-item")[0]).children(".right-page").append($photo);
     }
 }
+
 
 function handleError(status) {
     if (status.status == 401) {
@@ -51,4 +52,41 @@ function delCookie(name) {
     if (cval != "") {
         document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString();
     }
+}
+
+function uploadComment() {
+    var comment = $('#comment').val();
+    var file = $('.fancybox-image').attr('src').split('/')[2];
+    $.ajax({
+        type: 'POST',
+        url: "/gallery/comment/" + file,
+        data: {
+            comment: comment,
+            group: galleryId
+        },
+        success: function (data) {
+            if(data){
+                var newComments = '';
+                data.forEach(function (c) {
+                   newComments += '<p><strong>'+c.username+'  </strong>'
+                       + c.comment+'</p>';
+                });
+                $('.fancybox-comments').html(newComments);
+            }
+        },
+        error: function (status) {
+            handleError(status);
+
+        }
+    })
+}
+
+function hideUpload() {
+    $('.upload-form').hide();
+    $('.upload-cover').hide();
+}
+
+function showUpload() {
+    $('.upload-cover').show();
+    $('.upload-form').show();
 }

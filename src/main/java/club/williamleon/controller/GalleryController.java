@@ -1,9 +1,6 @@
 package club.williamleon.controller;
 
-import club.williamleon.model.GroupDetail;
-import club.williamleon.model.GroupInfo;
-import club.williamleon.model.InviteUser;
-import club.williamleon.model.UploadInfo;
+import club.williamleon.model.*;
 import club.williamleon.service.GroupService;
 import club.williamleon.service.ImageService;
 import club.williamleon.util.val.GroupRole;
@@ -14,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 /**
  * Created by 53068 on 2018/5/16 0016.
@@ -33,6 +32,11 @@ public class GalleryController {
         GroupService groupService) {
         this.imageService = imageService;
         this.groupService = groupService;
+    }
+
+    @GetMapping("/all")
+    public List getCategory() {
+        return groupService.getGroupList();
     }
 
     @GetMapping("/")
@@ -76,9 +80,9 @@ public class GalleryController {
     }
 
     @GetMapping("/photo/{filename}")
-    public ResponseEntity getPhotoDetail(@PathVariable String filename) {
+    public ResponseEntity getPhotoDetail(@PathVariable String filename, @RequestParam("group") Long groupId) {
 
-        return null;
+        return imageService.getPhotoDetail(filename, groupId);
     }
 
     @GetMapping("/{id}/role")
@@ -107,10 +111,14 @@ public class GalleryController {
         return null;
     }
 
-    @PostMapping("/comment/{photoId}")
-    public ResponseEntity comment() {
-
-        return null;
+    @PostMapping("/comment/{photoName}")
+    public ResponseEntity comment(@PathVariable String photoName,
+        @RequestParam("comment") String comment, @RequestParam("group") Long groupId) {
+        Comment entity = new Comment();
+        entity.setPhotoName(photoName);
+        entity.setComment(comment);
+        entity.setGroupId(groupId);
+        return imageService.commentPhoto(entity);
     }
 
 }

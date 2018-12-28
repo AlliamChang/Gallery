@@ -92,7 +92,7 @@ public class UserServiceImpl implements UserService {
                     logger.info("{} successfully logged in.", account);
                 }
             } else {
-                responseEntity = new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+                responseEntity = new ResponseEntity<>("Lack of account/password", HttpStatus.UNAUTHORIZED);
             }
         }
         return responseEntity;
