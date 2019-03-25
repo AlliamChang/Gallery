@@ -24,7 +24,9 @@ public interface ImageService {
 
     Path load(String filename);
 
-    ResponseEntity<String> uploadPhoto(MultipartFile photo, UploadInfo info, Long id);
+    ResponseEntity<String> uploadPhoto(MultipartFile photo, UploadInfo info, Long groupId);
+
+    ResponseEntity<String> deletePhoto(String name, Long groupId);
 
     ResponseEntity<List<Comment>> commentPhoto(Comment comment);
 

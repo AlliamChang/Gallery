@@ -13,29 +13,42 @@
 <div class="container">
     <div class="bb-custom-wrapper desk">
         <div class="desk-page">
-            <form class="login-form">
-                <h3 id="loginMsg"></h3>
-                <label for="account">&nbsp&nbsp&nbspAccount: </label><input type="text" id="account" placeholder="Email/Username">
-                <br>
-                <label for="password">Password: </label><input type="password" id="password">
-                <br>
-                <button id="login">Login</button>
+            <div class="login-form">
+                <div class="error-container">
+                    <p id="loginMsg"></p>
+                </div>
+                <div id="account_field" class="field">
+                    <input type="text" id="account" placeholder="Account or Email">
+                    <label for="account">Account or Email</label>
+                </div>
+                <div id="password_field" class="field">
+                    <input type="password" id="password" placeholder="Password">
+                    <label for="password" >Password</label>
+                </div>
+                <button id="login" class="gallery-button">Login</button>
                 <a class="link" href="" style="font-size: 13px">forget password?</a>
-            </form>
+            </div>
             <div class="copyright">Copyright © AvenChang |&nbsp<a class="link" href="http://www.miibeian.gov.cn/">粤ICP备17090921号-2</a></div>
         </div>
         <div class="cover-page">
-            <label>abc</label>
         </div>
     </div>
 </div>
 </body>
 <script>
     if (document.cookie.indexOf("error=") > -1) {
-        $('h3').text(getCookie('error'));
+        showError(getCookie('error'));
         delCookie('error');
     }
+
     $(document).ready(function () {
+        $('.login-form').keydown(function (e) {
+            var keycode = e.keyCode || e.which;
+            if(keycode == 108 || keycode == 13){
+                $('#login').click();
+            }
+        });
+
         $('#login').on('click', function () {
             $.ajax({
                 type: "POST",
@@ -46,15 +59,23 @@
                     passwd: $('#password').val()
                 },
                 success: function (data) {
-                    alert(data);
+                    // alert(data);
                     document.cookie = "token=" + data + "; path=/";
-                    window.location.href = "/browse";
+                    // window.location.href = "/browse";
+                    window.location.replace('/')
                 },
                 error: function (status) {
-                    console.log(status.responseText);
+                    // setCookie('error', status.responseText);
+                    showError(status.responseText);
                 }
             })
         })
     });
+
+    function showError(text) {
+        $('#loginMsg').text(text);
+        $($('.field')[0]).css('margin-top', 0);
+        $('.error-container').show();
+    }
 </script>
 </html>

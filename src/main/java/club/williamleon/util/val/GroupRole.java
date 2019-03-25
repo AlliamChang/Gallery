@@ -9,20 +9,22 @@ import java.util.Map;
 
 /**
  * 相册不同的管理权限
- * 删除  修改相册权限  增加用户    删除用户    查看评论
- * 创建者   √        √          √          √          √
- * 管理者   x         √          √          √          √
- * 观察者   x         x           x          x           √
- * 访客     x         x           x           x           x
+ * 删除  修改相册权限  增加用户    删除用户    查看评论     操作照片
+ * 创建者   √        √          √          √          √        √
+ * 管理者   x         √          √          √          √       √
+ * 观察者   x         x           x          x           √     x
+ * 访客     x         x           x           x           x       x
  */
 public enum GroupRole {
 
-    CREATOR("Creator", true, true, true, true, true),
-    MANAGER("Manager", false, true, true, true, true),
-    OBSERVER("Observer", false, false, false, false, true),
-    PASSER("Passer", false, false, false, false, false);
+    CREATOR("Creator", true, true, true, true, true, true),
+    MANAGER("Manager", true, false, true, true, true, true),
+    OBSERVER("Observer", false, false, false, false, false, true),
+    PASSER("Passer", false, false, false, false, false, false);
 
     private final String label;
+
+    private final boolean uploadable;
 
     private final boolean deletable;
 
@@ -34,10 +36,11 @@ public enum GroupRole {
 
     private final boolean reviewComment;
 
-    GroupRole(String label, boolean deletable, boolean modifiable,
+    GroupRole(String label, boolean uploadable, boolean deletable, boolean modifiable,
         boolean addUser,
         boolean removeUser, boolean reviewComment) {
         this.label = label;
+        this.uploadable = uploadable;
         this.deletable = deletable;
         this.modifiable = modifiable;
         this.addUser = addUser;
@@ -51,6 +54,14 @@ public enum GroupRole {
         for (GroupRole groupRole : values()) {
             mappings.put(groupRole.label, groupRole);
         }
+    }
+
+    public String label() {
+        return label;
+    }
+
+    public boolean isUploadable() {
+        return uploadable;
     }
 
     public boolean isDeletable() {

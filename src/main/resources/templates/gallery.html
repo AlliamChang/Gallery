@@ -22,24 +22,19 @@
 </head>
 <body>
 <div class="container">
-    <div class="bb-custom-wrapper">
-        <div class="bookmark"></div>
+    <div class="bb-custom-wrapper album">
+        <!--TODO-->
+        <!--<div class="menu" title="Menu"></div>-->
         <div class="prev-page-btn"></div>
         <div id="bb-bookblock" class="bb-bookblock">
-            <div id="menu-page" class="menu-page" hidden>
-                <div class="left-page"></div>
-                <div class="right-page"></div>
-            </div>
             <div class="bb-item">
                 <div class="left-page"></div>
                 <div class="right-page"></div>
             </div>
         </div>
         <div class="next-page-btn"></div>
-        <div class="upload">
-            <a onclick="showUpload()">
-                <img src="">
-            </a>
+        <div class="upload" title="Upload Photo">
+            <a onclick="showUpload()"></a>
         </div>
     </div>
     <div class="upload-cover"></div>
@@ -48,11 +43,29 @@
             <label for="upload_file" id="upload_label"></label>
             <input id="upload_file" type="file" accept="image/*">
         </div>
-        <label for="upload_description">Description: </label><input id="upload_description" type="text" maxlength="10">
-        <label for="upload_original_time">Original Time: </label><input id="upload_original_time" type="text" contenteditable="false">
-        <input id="upload_public" type="checkbox">Public
-        <button onclick="hideUpload()">Upload</button>
-        <button onclick="hideUpload()">X</button>
+        <div class="upload-info">
+            <div class="error-container">
+                <p></p>
+            </div>
+            <div class="upload-info-base">
+                <label for="upload_description">Description: </label>
+                <input id="upload_description" type="text" maxlength="10" placeholder="描述照片(10字以内)">
+            </div>
+            <div class="upload-info-base">
+                <label for="upload_original_time">Shooting Time: </label>
+                <input id="upload_original_time" type="date" contenteditable="false">
+            </div>
+            <div class="upload-info-base">
+                <input id="upload_public" type="checkbox"><label for="upload_public">Public</label>
+            </div>
+            <input id="upload_rotate" value="0" hidden>
+            <button id="upload-btn" class="gallery-button">Upload</button>
+        </div>
+        <button class="upload-cancel" onclick="hideUpload()">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 10.6L6.6 5.2 5.2 6.6l5.4 5.4-5.4 5.4 1.4 1.4 5.4-5.4 5.4 5.4 1.4-1.4-5.4-5.4 5.4-5.4-1.4-1.4-5.4 5.4z"></path>
+            </svg>
+        </button>
     </div>
 </div>
 </body>
@@ -61,8 +74,7 @@
         var config = {
                 $bookBlock: $('#bb-bookblock'),
                 $prev: $('.prev-page-btn'),
-                $next: $('.next-page-btn'),
-                $bookmark: $('.bookmark')
+                $next: $('.next-page-btn')
             },
             init = function () {
                 config.$bookBlock.bookblock({
@@ -120,6 +132,7 @@
 </script>
 <script>
     var galleryId = getCookie('gallery');
+    var role;
     var title;
     if (galleryId) {
         $.ajax({
@@ -128,11 +141,12 @@
             async: false,
             success: function (data) {
                 title = data.groupName;
+                role = data.roleInGroup;
                 $(document).attr('title', title);
                 console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {
-                    loadPhoto(i, photos[i].filename, photos[i].title);
+                    loadPhoto(i, photos[i].filename, photos[i].title, photos[i].ratioWH, photos[i].rotate);
                 }
             },
             error: function (status) {
@@ -148,11 +162,12 @@
             success: function (data) {
                 setCookie('gallery', data.groupId);
                 title = data.groupName;
+                role = data.roleInGroup;
                 $(document).attr('title', title);
                 console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {
-                    loadPhoto(i, photos[i].filename, photos[i].title);
+                    loadPhoto(i, photos[i].filename, photos[i].title, photos[i].ratioWH, photos[i].rotate);
                 }
             },
             error: function (status) {
@@ -168,6 +183,34 @@
     $(function () {
 
         $('.upload-cover').click(function () {
+            hideUpload();
+        });
+
+        $('#upload-btn').click(function () {
+            var formData = new FormData();
+            if ($('#upload_file')[0].files.length != 1) {
+                $('.error-container').children('p').text('请选择图片');
+                $('.error-container').show();
+                return;
+            }
+            formData.append('file', $('#upload_file')[0].files[0]);
+            formData.append('description', $('#upload_description').val());
+            formData.append('originalTime', $('#upload_original_time').val());
+            formData.append('rotate', $('#upload_rotate').val());
+            $.ajax({
+                type: 'POST',
+                url: '/gallery/'+galleryId+'/photo',
+                cache: false,
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (data) {
+                    window.location.reload();
+                },
+                error: function (status) {
+                    console.log(status.responseText);
+                }
+            });
             hideUpload();
         });
 
@@ -206,21 +249,33 @@
                     url: '/gallery/photo/' + file + '?group=' + galleryId,
                     success: function (data) {
                         var comments = '<h3>' + data.title + '</h3>';
+                        comments += '<div class="fancybox-comments">';
                         if(data.comments.length > 0){
-                            comments += '<div class="fancybox-comments">';
                             data.comments.forEach(function (c) {
-                                comments += '<p><strong>'+c.username+'  </strong>'
-                                    + c.comment+'</p>';
+                                comments += '<p><strong>' + c.username + '  </strong>'
+                                    + c.comment + '</p>';
                             });
-                            comments += '</div>';
                         }else {
-
+                            comments += '<p>no comments...</p>';
                         }
-                        comments += '<div class="fancybox-up">' +
-                            '   <input id="comment"><button id="commentBtn" onclick="uploadComment()">评论</button>' +
-                            '</div>';
+                        comments += '</div>';
+                        comments += '' +
+                            '<div class="fancybox-up">' +
+                            '   <input id="comment" placeholder="写留言">' +
+                            '   <div class="fancybox-opbtn">' +
+                            '       <button id="commentBtn" class="gallery-button" onclick="uploadComment()">发送</button>';
+                        if(role == 'Creator' || role == 'Manager'){
+                            comments += '' +
+                                '   <a id="deleteBtn" class="link" onclick="deletePhoto()">删除</a>';
+                        }
+                        comments += '' +
+                            '   </div>' +
+                            '</div>' +
+                            '<p class="shooting-time">拍摄于'+data.originalDate+'</p>';
                         instance.$refs.container.find('.fancybox-caption')
                             .html(comments);
+                        var $image = instance.$refs.container.find('.fancybox-image');
+                        addRotate($image, data.rotate);
                     },
                     error: function (status) {
                         handleError(status);
@@ -232,7 +287,7 @@
 
         var fileLabel = $('#upload_label');
         var fileInput = $('#upload_file');
-        var demoVal = $('#demo-val');
+        // var demoVal = $('#demo-val');
         var oFile = new FileReader();
         var passFileType = /^(?:image\/bmp|image\/gif|image\/jpeg|image\/png)$/i;
 
@@ -257,24 +312,28 @@
             oFile.readAsDataURL(_file);
 
             EXIF.getData(_file, function(){
-                var _dataTxt = EXIF.pretty(this);
                 var _dataJson = EXIF.getAllTags(this);
-
+                var date;
                 // demoLog.html(_dataJson);
-                demoVal.val(_dataTxt);
-                $('#upload_original_time').val(_dataJson['DateTimeOriginal'])
+                // demoVal.val(_dataTxt);
+                if(_dataJson['DateTimeOriginal']){
+                    date = _dataJson['DateTimeOriginal'].split(' ')[0];
+                    date = date.replace(/:/g, "-");
+                    $('#upload_original_time').val(date)
+                }
 
-                // var _rotate = 0;
-                // var _orientation = EXIF.getTag(this, 'Orientation');
+                var _rotate = 0;
+                var _orientation = EXIF.getTag(this, 'Orientation');
 
-                // if (_orientation == 3) {
-                //     _rotate = 180;
-                // } else if (_orientation == 6) {
-                //     _rotate = 90;
-                // } else if (_orientation == 8) {
-                //     _rotate = 270;
-                // }
-
+                if (_orientation == 3) {
+                    _rotate = 180;
+                } else if (_orientation == 6) {
+                    _rotate = 90;
+                } else if (_orientation == 8) {
+                    _rotate = 270;
+                }
+                $('#upload_rotate').val(_rotate);
+                addRotate(fileLabel, _rotate);
                 // fileLabel.addClass('rotate-' + _rotate);
             });
         });

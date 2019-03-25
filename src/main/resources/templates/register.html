@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charst="UTF-8">
+    <meta name="author" content="Aven">
+    <title>register</title>
+    <link rel="shortcut icon" href="/img/cloud.ico">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+</head>
+<body>
+<!--TODO temporary-->
+<h2 id="message"></h2>
+<label for="username">Username:</label><input id="username">
+<label for="password">Password:</label><input id="password" type="password">
+<label for="poll_code">Poll Code:</label><input id="poll_code">
+<button id="register">Register!</button>
+</body>
+<script>
+    $('#register').click(function () {
+        var username = $('#username').val();
+        var password = $('#password').val();
+        var pollCode = $('#poll_code').val();
+        var $message = $('#message');
+        if (username == null || username == '') {
+            $message.text("Enter your username!");
+            return;
+        }
+        if (password == null || password == '') {
+            $message.text("Enter your password!");
+            return;
+        }
+        if (pollCode == null || pollCode == '') {
+            $message.text("Enter your poll code!");
+            return;
+        }
+        $.ajax({
+            type: 'POST',
+            url: '/user/register',
+            async: false,
+            data: {
+                username: username,
+                passwd: password,
+                code: pollCode
+            },
+            success: function (data) {
+                $message.text(data)
+            },
+            error: function (status) {
+                $message.text(status.responseText)
+            }
+        })
+    })
+</script>
+</html>

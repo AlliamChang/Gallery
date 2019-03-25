@@ -6,6 +6,7 @@ import club.williamleon.domain.PasswdEntity;
 import club.williamleon.domain.UserEntity;
 import club.williamleon.model.RegisterUser;
 import club.williamleon.repo.PasswdRepo;
+import club.williamleon.repo.PollCodeRepo;
 import club.williamleon.repo.UserRepo;
 import club.williamleon.service.UserService;
 import club.williamleon.util.CookiesUtil;
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepo userRepo;
+
+    @Autowired
+    private PollCodeRepo pollCodeRepo;
 
     @Override
     public ResponseEntity<String> login(HttpServletRequest request) {
@@ -121,9 +125,14 @@ public class UserServiceImpl implements UserService {
         PasswdEntity passwdEntity = new PasswdEntity(registerUser.getUsername(),
             md5Passwd);
 
+        if (pollCodeRepo.validateCode(registerUser.getCode()).size() == 0) {
+            return new ResponseEntity<>("Invalid poll code", HttpStatus.BAD_REQUEST);
+        }
+
         if (!userRepo.existsByUsername(registerUser.getUsername())) {
             userRepo.save(userEntity);
             passwdRepo.save(passwdEntity);
+            pollCodeRepo.reduceCodeFreq(registerUser.getCode());
             return new ResponseEntity<>("Register success", HttpStatus.OK);
         }else {
             return new ResponseEntity<>("username is existed", HttpStatus.BAD_REQUEST);

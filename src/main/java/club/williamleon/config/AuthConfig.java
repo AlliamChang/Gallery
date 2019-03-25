@@ -28,5 +28,7 @@ public class AuthConfig implements WebMvcConfigurer {
         registry.addViewController("/upload").setViewName("upload");
         registry.addViewController("/category").setViewName("category");
         registry.addViewController("/personal").setViewName("personal_info");
+        registry.addViewController("/register").setViewName("register");
+        registry.addViewController("/creator").setViewName("gallery_creator");
     }
 }

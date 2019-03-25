@@ -25,6 +25,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -81,6 +83,10 @@ public class ImageServiceImpl implements ImageService {
     @Transactional
     public ResponseEntity<String> uploadPhoto(MultipartFile photo, UploadInfo info, Long groupId) {
         Long userId = sessionParam.getUserId();
+        GroupRole role = groupService.getRoleInGroup(groupId);
+        if (!role.isUploadable()) {
+            return new ResponseEntity<>("You can't upload photo", HttpStatus.FORBIDDEN);
+        }
 
         // generate a name for photo
         String filename = photo.getOriginalFilename();
@@ -89,11 +95,13 @@ public class ImageServiceImpl implements ImageService {
         if (!"jpg".equals(photoType)) {
             // TODO check the type of file
         }
+
         String date = StringUtil.formatDate(new Date());
-        String uploaderMd5 = MD5.digest("uploader");
-        filename = uploaderMd5.concat(date).concat(".").concat(photoType);
+        String uploaderMd5 = MD5.digest(filename);
+        filename = date.concat(uploaderMd5).concat(".").concat(photoType);
         // store
         if(this.store(photo, filename)){
+            PhotoEntity entity = new PhotoEntity();
             Date originalTime = null;
             try {
                 originalTime = StringUtil
@@ -101,13 +109,26 @@ public class ImageServiceImpl implements ImageService {
             } catch (ParseException e) {
                 originalTime = new Date();
             }
-            PhotoEntity entity = new PhotoEntity();
+            try {
+                BufferedImage bufferedImage = ImageIO.read(photo.getInputStream());
+                double width = bufferedImage.getWidth();
+                double height = bufferedImage.getHeight();
+                if(info.getRotate() == 90 || info.getRotate() == 270){
+                    entity.setRationWH(height / width);
+                } else {
+                    entity.setRationWH(width / height);
+                }
+            } catch (IOException e) {
+                logger.error("Can't get the photo's size! {}", photo.getOriginalFilename());
+                entity.setRationWH(0.0);
+            }
             entity.setGroupId(groupId);
             entity.setUpTime(new Date());
             entity.setUpId(userId);
             entity.setOriginTime(originalTime);
             entity.setDescription(info.getDescription());
             entity.setClick(0L);
+            entity.setRotate(info.getRotate());
             entity.setName(filename);
             photoRepo.save(entity);
 
@@ -125,10 +146,23 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     @Transactional
+    public ResponseEntity<String> deletePhoto(String name, Long groupId) {
+        GroupRole role = groupService.getRoleInGroup(groupId);
+        if(!role.isUploadable()){
+            return new ResponseEntity<>("Your permission is insufficient!", HttpStatus.FORBIDDEN);
+        }
+        // just delete the photo record in db
+        // the file and the comments still there
+        photoRepo.deleteByNameAndGroupId(name, groupId);
+        return new ResponseEntity<>("Delete success!", HttpStatus.OK);
+    }
+
+    @Override
+    @Transactional
     public ResponseEntity<List<Comment>> commentPhoto(Comment comment) {
         Long userId = sessionParam.getUserId();
         GroupRole role = groupService
-            .getRoleInGroup(userId, comment.getGroupId());
+            .getRoleInGroup(comment.getGroupId());
         if (GroupRole.PASSER.equals(role)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -156,8 +190,7 @@ public class ImageServiceImpl implements ImageService {
 
     @Override
     public ResponseEntity<PhotoDetail> getPhotoDetail(String photoName, Long groupId) {
-        Long userId = sessionParam.getUserId();
-        GroupRole role = groupService.getRoleInGroup(userId, groupId);
+        GroupRole role = groupService.getRoleInGroup(groupId);
         if (GroupRole.PASSER.equals(role)) {
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
@@ -169,6 +202,8 @@ public class ImageServiceImpl implements ImageService {
         }
         detail.setFilename(entity.getName());
         detail.setTitle(entity.getDescription());
+        detail.setOriginalDate(StringUtil.formatExifDate(entity.getOriginTime()));
+        detail.setRotate(entity.getRotate());
         List<Comment> comments = buildComment(photoName);
         detail.setComments(comments);
 

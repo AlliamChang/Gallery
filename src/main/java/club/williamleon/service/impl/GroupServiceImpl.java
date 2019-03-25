@@ -2,10 +2,11 @@ package club.williamleon.service.impl;
 
 import club.williamleon.config.SessionParam;
 import club.williamleon.domain.GroupEntity;
+import club.williamleon.domain.PhotoEntity;
 import club.williamleon.domain.UserInGroupEntity;
 import club.williamleon.model.GroupDetail;
 import club.williamleon.model.GroupInfo;
-import club.williamleon.model.InviteUser;
+import club.williamleon.model.Invitee;
 import club.williamleon.repo.GroupRepo;
 import club.williamleon.repo.PhotoRepo;
 import club.williamleon.repo.UserInGroupRepo;
@@ -20,6 +21,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,9 +57,8 @@ public class GroupServiceImpl implements GroupService {
         GroupEntity newGroup = new GroupEntity();
         newGroup.setCreator(creatorId);
         newGroup.setName(groupInfo.getName());
-        newGroup.setDescription(groupInfo.getDescription().isEmpty() ?
-            "" :
-            groupInfo.getDescription());
+        newGroup.setDescription(StringUtils.isEmpty(groupInfo.getDescription()) ?
+            "" : groupInfo.getDescription());
         newGroup.setPublic(groupInfo.isPublic());
         newGroup = groupRepo.save(newGroup);
 
@@ -72,7 +73,7 @@ public class GroupServiceImpl implements GroupService {
 
     @Override
     public void joinGroup() {
-
+        // TODO future feature
     }
 
     @Override
@@ -80,7 +81,7 @@ public class GroupServiceImpl implements GroupService {
         Long userId = sessionParam.getUserId();
         UserInGroupEntity entity = userInGroupRepo.findByUserId(userId);
         if (GroupRole.CREATOR.equals(entity.getRole())) {
-            // TODO creator can't leave
+            // creator can't leave
             return;
         }
 
@@ -92,14 +93,14 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public void inviteUsersToJoin(InviteUser inviteUser) {
+    public void inviteUsersToJoin(Invitee invitee) {
         Long inviterId = sessionParam.getUserId();
-        Long groupId = inviteUser.getGroupId();
+        Long groupId = invitee.getGroupId();
         if (groupId == null) {
-            // TODO defensive programming
+            // defensive programming
             return;
         }
-        Long inviteUserId = userRepo.findIdByUsername(inviteUser.getUsername());
+        Long inviteUserId = userRepo.findIdByUsername(invitee.getUsername());
         if (inviteUserId == null) {
             // user not exist
             return;
@@ -107,16 +108,15 @@ public class GroupServiceImpl implements GroupService {
 
         UserInGroupEntity inviter = userInGroupRepo.findByUserId(inviterId);
         if (!inviter.getRole().isAddUser()) {
-            // TODO limited authority
+            // limited authority
             return;
         }
 
-        if (GroupRole.compareLevel(inviter.getRole(), inviteUser.getRole()) >=
-            0) {
+        if (GroupRole.compareLevel(inviter.getRole(), invitee.getRole()) >= 0) {
             UserInGroupEntity entity = new UserInGroupEntity();
             entity.setGroupId(groupId);
             entity.setUserId(inviteUserId);
-            entity.setRole(inviteUser.getRole());
+            entity.setRole(invitee.getRole());
             userInGroupRepo.save(entity);
         } else {
             // authority is not enough
@@ -125,6 +125,7 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
+    // TODO future feature
     public List<GroupInfo> getGroupList() {
         Long userId = sessionParam.getUserId();
         List<GroupInfo> groups = new ArrayList<>();
@@ -135,19 +136,25 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    public Long getDefaultList() {
+    // TODO Deprecated when implement getGroupList()
+    public Long getDefaultGallery() {
         Long userId = sessionParam.getUserId();
         List<Long> groups = groupRepo.findDefaultGroup(userId);
         if (groups == null || groups.isEmpty()) {
-            // TODO join no groups yet
-            return null;
+            // return public default gallery
+            Long defaultPublicGallery = 1L;
+            return defaultPublicGallery;
         }else {
             return groups.get(0);
         }
     }
 
     @Override
-    public GroupRole getRoleInGroup(Long userId, Long groupId) {
+    public GroupRole getRoleInGroup(Long groupId) {
+        Long userId = sessionParam.getUserId();
+        if (userId == null) {
+            return GroupRole.PASSER;
+        }
         UserInGroupEntity role = userInGroupRepo.findByUserIdAndGroupId(userId, groupId);
         if (role == null) {
             return GroupRole.PASSER;
@@ -169,18 +176,19 @@ public class GroupServiceImpl implements GroupService {
             GroupDetail detail = new GroupDetail();
             detail.setGroupName(group.getName());
             detail.setGroupId(groupId);
-            List<Object[]> photos = photoRepo.findPhotoInfo(groupId);
+            detail.setRoleInGroup(roleInGroup.get().getRole().label());
+            List<PhotoEntity> photos = photoRepo.findPhotoInfo(groupId);
             if (GroupRole.PASSER.equals(roleInGroup.get().getRole())) {
                 if(group.isPublic()){
-                    for (Object[] photo : photos) {
-                        detail.addPhoto((String) photo[0], "");
+                    for (PhotoEntity photo : photos) {
+                        detail.addPhoto(photo.getName(), "", photo.getRationWH(), photo.getRotate());
                     }
                 }else {
                     return new ResponseEntity<>(HttpStatus.FORBIDDEN);
                 }
             }else {
-                for (Object[] photo : photos) {
-                    detail.addPhoto((String) photo[0], (String) photo[1]);
+                for (PhotoEntity photo : photos) {
+                    detail.addPhoto(photo.getName(), photo.getDescription(), photo.getRationWH(), photo.getRotate());
                 }
             }
             return new ResponseEntity<>(detail, HttpStatus.OK);

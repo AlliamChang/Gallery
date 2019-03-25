@@ -1,5 +1,6 @@
 package club.williamleon.model;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -9,6 +10,9 @@ public class PhotoDetail {
 
     private String filename;
     private String title;
+    private Double ratioWH;
+    private int rotate;
+    private String originalDate;
     private List<Comment> comments;
 
     public String getFilename() {
@@ -25,6 +29,30 @@ public class PhotoDetail {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public Double getRatioWH() {
+        return ratioWH;
+    }
+
+    public void setRatioWH(Double ratioWH) {
+        this.ratioWH = ratioWH;
+    }
+
+    public String getOriginalDate() {
+        return originalDate;
+    }
+
+    public void setOriginalDate(String originalDate) {
+        this.originalDate = originalDate;
+    }
+
+    public int getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(int rotate) {
+        this.rotate = rotate;
     }
 
     public List<Comment> getComments() {

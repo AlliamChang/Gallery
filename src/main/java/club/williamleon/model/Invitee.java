@@ -5,7 +5,7 @@ import club.williamleon.util.val.GroupRole;
 /**
  * @author I343702 SAP
  */
-public class InviteUser {
+public class Invitee {
 
     private Long groupId;
 

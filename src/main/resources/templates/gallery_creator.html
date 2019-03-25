@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Aven">
+    <title>Create Gallery</title>
+    <link rel="shortcut icon" href="/img/cloud.ico">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/gallery.js"></script>
+</head>
+<body>
+<!--TODO temporary-->
+<h2 id="message"></h2>
+<div>
+    <h3>Create Gallery</h3>
+    <label for="name">Gallery Name:</label><input id="name">
+    <label for="description">Description:</label><input id="description">
+    <input id="public" type="checkbox"><label for="public">public</label>
+    <button id="create">Create!</button>
+</div>
+<br>
+<div>
+    <h3>Invite User</h3>
+    <label for="gallery_id">Gallery:</label><input id="gallery_id" type="number">
+    <label for="invitee">Invitee:</label><input id="invitee">
+    <label for="role">Role:</label>
+    <select id="role">
+        <option value="Manager">Manager</option>
+        <option value="Observer">Observer</option>
+    </select>
+    <button id="invite">Invite!</button>
+</div>
+</body>
+<script>
+    $('#create').click(function () {
+        var $message = $('#message');
+        var name = $('#name').val();
+        var description = $('#description').val();
+        var isPublic = $('#public').is(':checked');
+
+        if (name == null || name == '') {
+            $message.text("Enter gallery name!");
+            return
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/gallery/',
+            async: false,
+            data: {
+                name: name,
+                description: description,
+                isPublic: isPublic
+            },
+            success: function (data) {
+                $message.text(data)
+            },
+            error: function (status) {
+                handleError(status);
+                $message.text(status.responseText);
+            }
+        })
+    });
+
+    $('#invite').click(function () {
+        var $message = $('#message');
+        var galleryId = $('#gallery_id').val();
+        var invitee = $('#invitee').val();
+        var role = $('#role').val();
+
+        if (galleryId == null) {
+            $message.text("Enter gallery id!");
+            return
+        }
+
+        if (invitee == null || invitee == '') {
+            $message.text("Enter invitee!");
+            return
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/gallery/' + galleryId + '/invite',
+            async: false,
+            data: {
+                username: invitee,
+                role: role
+            },
+            success: function (data) {
+                $message.text(data)
+            },
+            error: function (status) {
+                handleError(status);
+                $message.text(status.responseText);
+            }
+        })
+    })
+</script>
+</html>

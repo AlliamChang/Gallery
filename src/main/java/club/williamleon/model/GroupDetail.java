@@ -82,10 +82,12 @@ public class GroupDetail {
         this.photos = photos;
     }
 
-    public void addPhoto(String name, String description) {
+    public void addPhoto(String name, String description, Double ratioWH, int rotate) {
         PhotoDetail photo = new PhotoDetail();
         photo.setFilename(name);
         photo.setTitle(description);
+        photo.setRatioWH(ratioWH);
+        photo.setRotate(rotate);
         photos.add(photo);
     }
 

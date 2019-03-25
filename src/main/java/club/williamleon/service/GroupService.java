@@ -2,7 +2,7 @@ package club.williamleon.service;
 
 import club.williamleon.model.GroupDetail;
 import club.williamleon.model.GroupInfo;
-import club.williamleon.model.InviteUser;
+import club.williamleon.model.Invitee;
 import club.williamleon.util.val.GroupRole;
 import org.springframework.http.ResponseEntity;
 
@@ -16,13 +16,13 @@ public interface GroupService {
 
     void leaveGroup(Long groupId);
 
-    void inviteUsersToJoin(InviteUser inviteUser);
+    void inviteUsersToJoin(Invitee invitee);
 
     List<GroupInfo> getGroupList();
 
-    Long getDefaultList();
+    Long getDefaultGallery();
 
-    GroupRole getRoleInGroup(Long userId, Long groupId);
+    GroupRole getRoleInGroup(Long groupId);
 
     ResponseEntity<GroupDetail> enterGroup(Long id);
 }

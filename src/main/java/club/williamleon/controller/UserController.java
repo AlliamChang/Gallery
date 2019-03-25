@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,10 +29,13 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity register(RegisterUser registerUser) {
-//        RegisterUser registerUser = new RegisterUser();
-//        registerUser.setPasswd(passwd);
-//        registerUser.setUsername(username);
-        return userService.register(registerUser);
+        if (StringUtils.isEmpty(registerUser.getCode())
+                || StringUtils.isEmpty(registerUser.getPasswd())
+                || StringUtils.isEmpty(registerUser.getCode())) {
+            return new ResponseEntity("Miss Info", HttpStatus.BAD_REQUEST);
+        }else {
+            return userService.register(registerUser);
+        }
     }
 
     @PostMapping("/login")
@@ -39,11 +43,11 @@ public class UserController {
         return userService.login(request);
     }
 
-    @PostMapping("/logout")
+    @GetMapping("/logout")
     public void logout(HttpServletRequest request, HttpServletResponse response) {
         userService.logout(request);
         try {
-            response.sendRedirect(request.getContextPath() + "/index");
+            response.sendRedirect(request.getContextPath() + "/");
         } catch (IOException e) {
             logger.error("Logout failed when try to redirect to logout page. Reason: " + e.getMessage());
         }

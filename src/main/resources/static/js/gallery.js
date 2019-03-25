@@ -6,19 +6,54 @@
 //     $('#bb-bookblock').bookblock('first');
 // }
 
-function loadPhoto(i, filename, title) {
-    $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
-    $photo = $('<div class="photo-base"> <a data-fancybox="image"><img></a> <h3></h3> </div>');
+function addRotate($image, rotate) {
+    if(rotate == 0 || rotate == 90
+        || rotate == 180 || rotate == 270) {
+        $image.removeClass('rotate-0');
+        $image.removeClass('rotate-90');
+        $image.removeClass('rotate-180');
+        $image.removeClass('rotate-270');
+        $image.addClass('rotate-' + rotate);
+    }
+}
 
-    $photo.addClass("photo-"+(i+1));
+function loadPhoto(i, filename, title, ratioWH, rotate) {
+    $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
+    $photo = $('<div class="photo-base"> <a data-fancybox="image"><img></a> <p id="title"></p> </div>');
+    var page = parseInt(i / 6),
+        pos = i % 6;
+
+    if (page > 0 && pos == 0) {
+        $(".bb-bookblock").append($page);
+    }
+
+    $photo.addClass("photo-"+(pos+1));
     $photo.find("img").attr("src", "/files/"+filename);
     $photo.children("a").attr("href", "/files/"+filename);
-    $photo.children("h3").text(title);
+    $photo.children("#title").text(title);
 
-    if ((i % 6) < 3) {
-        $($(".bb-item")[0]).children(".left-page").append($photo);
+    // total area: 30 * 30
+    var area = 28 * 28;
+    if (ratioWH > 0) {
+        var height = Math.sqrt(area / ratioWH);
+        var width = height * ratioWH;
+        $photo.css('height', height + '%');
+        $photo.css('width', width + '%');
+        addRotate($photo.find('img'), rotate);
+    }
+
+    if (rotate == 90 || rotate == 270) {
+        $photo.find('img').css('width', (100 / ratioWH) + '%');
+    }
+
+    if (rotate == 270){
+        $photo.find('img').css('right', (100 / ratioWH) + '%');
+    }
+
+    if (pos < 3) {
+        $($(".bb-item")[page]).children(".left-page").append($photo);
     }else {
-        $($(".bb-item")[0]).children(".right-page").append($photo);
+        $($(".bb-item")[page]).children(".right-page").append($photo);
     }
 }
 
@@ -57,6 +92,9 @@ function delCookie(name) {
 function uploadComment() {
     var comment = $('#comment').val();
     var file = $('.fancybox-image').attr('src').split('/')[2];
+    if(comment == null || comment == ''){
+        return;
+    }
     $.ajax({
         type: 'POST',
         url: "/gallery/comment/" + file,
@@ -72,6 +110,7 @@ function uploadComment() {
                        + c.comment+'</p>';
                 });
                 $('.fancybox-comments').html(newComments);
+                $('.fancybox-up').children('#comment').val('');
             }
         },
         error: function (status) {
@@ -79,6 +118,26 @@ function uploadComment() {
 
         }
     })
+}
+
+function deletePhoto() {
+    var confirm = prompt("确定要删除该照片吗? 输入'confirm'确定:", "");
+    if(confirm == 'confirm') {
+        var file = $('.fancybox-image').attr('src').split('/')[2];
+        $.ajax({
+            type: 'DELETE',
+            url: "/gallery/photo/" + file + "?group=" + galleryId,
+            data: {
+                group: galleryId
+            },
+            success: function (data) {
+                window.location.reload();
+            },
+            error: function (status) {
+                handleError(status);
+            }
+        })
+    }
 }
 
 function hideUpload() {
@@ -90,3 +149,14 @@ function showUpload() {
     $('.upload-cover').show();
     $('.upload-form').show();
 }
+
+// $(window).resize(function () {
+//     var ratio = $(document).height() / $(document).width();
+//     if(0.5 < ratio && ratio < 2) {
+//         $('.bb-custom-wrapper').css('height', '100%');
+//         $('.bb-custom-wrapper').css('width', '100%');
+//     }else {
+//         $('.bb-custom-wrapper').css('height', '600px');
+//         $('.bb-custom-wrapper').css('width', '800px');
+//     }
+// });

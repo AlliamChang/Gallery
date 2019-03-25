@@ -2,6 +2,7 @@ package club.williamleon.repo;
 
 import club.williamleon.domain.PhotoEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
@@ -14,10 +15,12 @@ public interface PhotoRepo extends JpaRepository<PhotoEntity, Long> {
     @Query("select name from PhotoEntity ")
     List<String> findPhotoNames();
 
-    @Query("select p.name, p.description" +
+    @Query("select p" +
         " from PhotoEntity p" +
         " where p.groupId = ?1 order by p.originTime")
-    List<Object[]> findPhotoInfo(Long groupId);
+    List<PhotoEntity> findPhotoInfo(Long groupId);
 
     PhotoEntity findByName(String name);
+
+    void deleteByNameAndGroupId(String name, Long groupId);
 }

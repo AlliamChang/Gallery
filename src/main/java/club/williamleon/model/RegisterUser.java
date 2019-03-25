@@ -9,6 +9,8 @@ public class RegisterUser {
 
     private String passwd;
 
+    private String code;
+
     public String getUsername() {
         return username;
     }
@@ -23,5 +25,13 @@ public class RegisterUser {
 
     public void setPasswd(String passwd) {
         this.passwd = passwd;
+    }
+
+    public String getCode() {
+        return code;
+    }
+
+    public void setCode(String code) {
+        this.code = code;
     }
 }

@@ -1,6 +1,33 @@
 body {
     font-family: Helvetica, Tahoma, Arial, "PingFang SC", "Hiragino Sans GB", "Heiti SC", "Microsoft YaHei", "WenQuanYi Micro Hei", serif;
     margin: 0;
+    overflow-x: hidden;
+}
+
+.gallery-button {
+    background: #00A862;
+    color: #fff;
+    border: 1px solid #00A862;
+    cursor: pointer;
+    border-radius: 3px;
+    height: 34px;
+    width: 98px;
+    font-size: 15px;
+    text-align: center;
+    letter-spacing: 1px;
+    padding: 0;
+}
+
+.error-container {
+    border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    border-color: rgba(27,31,35,.15);
+    font-size: 13px;
+    background-color: #ffdce0;
+    color: #86181d;
+    display: none;
+    margin-bottom: 10px;
 }
 
 .container {
@@ -27,7 +54,7 @@ body {
     position: absolute;
     -webkit-perspective: 2000px;
     perspective: 2000px;
-    z-index: 1;
+    z-index: 3;
 }
 
 .bb-item {
@@ -39,29 +66,120 @@ body {
 }
 
 .desk-page {
-    width: 50%;
+    width: 55%;
     height: 100%;
     float: left;
     position: absolute;
 }
 
 .cover-page {
-    width: 50%;
+    width: 45%;
     height: 100%;
     right: 0;
     float: left;
-    background: #1da1f2;
+    background: url("/img/album-cover.png") round;
+    background-size: cover;
     position: absolute;
 }
 
-.login-form {
-    width: 50%;
-    height: 45%;
-    background-color: #bd081d;
-    right: 25%;
-    top: 27%;
+.cover-page:before {
+    content: '';
     position: absolute;
+    top: 6%;
+    left: 0;
+    height: 94%;
+    width: 10%;
+    box-shadow: -25px 0 25px rgba(0, 0, 0, 0.8), 0 -40px 40px rgba(0,0,0,0.9);
+    z-index: -1;
+}
+
+.field {
+    margin-top: 20px;
+    padding-top: 20px;
+    width: 100%;
+    position: relative;
+}
+
+.field#password_field{
+    margin-top: 13px;
+}
+
+.login-form {
+    width: 45%;
+    /*height: 43%;*/
+    height: 300px;
+    padding: 20px 20px;
+    background-color: rgba(255, 255, 255, 0.5);
+    -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
+    box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.3);
+    top: calc(50% - 150px);
+    position: relative;
     align-content: center;
+    margin: auto;
+}
+
+.login-form input:placeholder-shown:not(:focus) + * {
+    color: rgba(0, 0, 0, 0.38);
+    font-size: 18px;
+    top: 25px;
+}
+
+.login-form p {
+    margin: 10px;
+}
+
+.login-form label {
+    top: 0;
+    left: 0;
+    cursor: text;
+    position: absolute;
+    transition-duration: 0.2s;
+    transition-property: color, font-size, top;
+    color: rgba(0,0,0,0.6);
+    font-weight: inherit;
+}
+
+.login-form input {
+    background: none;
+    border: 0;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    border-radius: 0;
+    padding: 5px 0;
+    box-sizing: border-box;
+    -webkit-transition-property: border;
+    -moz-transition-property: border;
+    -o-transition-property: border;
+    transition-property: border;
+    transition-duration: 0.2s;
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    line-height: 25px;
+    font-size: 18px;
+}
+
+.login-form input:hover,
+.login-form input:focus,
+.login-form input:active {
+    border-color: #00A862;
+    outline: none;
+}
+
+.login-form input::placeholder {
+    color: transparent;
+}
+
+.login-form #login {
+    width: 100%;
+    margin-top: 15px;
+    height: 38px;
+}
+
+.login-form a {
+    position: absolute;
+    left: 20px;
+    bottom: 20px;
 }
 
 .left-page {
@@ -69,7 +187,7 @@ body {
     float: left;
     height: 100%;
     overflow: hidden;
-    background: url("/img/page-left-1.jpg") no-repeat top right;
+    background: url("/img/page-left.jpg") round;
     z-index: 0;
     background-size: cover;
     position: absolute;
@@ -82,11 +200,10 @@ body {
     right: 0;
     height: 100%;
     overflow: hidden;
-    background: url("/img/page-right-1.jpg") no-repeat top left;
+    background: url("/img/page-right.jpg") round;
     background-size: cover;
     z-index: 0;
     position: absolute;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .prev-page-btn {
@@ -110,12 +227,12 @@ body {
 }
 
 .photo-base {
-    height: 30%;
-    background: #fff;
+    height: 40%;
+    background: rgb(247, 247, 247);
     position: absolute;
     box-sizing: content-box;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    padding: 2% 2% 0 2%;
+    padding: 2% 2% 46px 2%;
     cursor: pointer;
 }
 
@@ -143,62 +260,102 @@ body {
     transform: rotate(3deg);
 }
 
+.photo-base p {
+    margin: 0;
+    width: 100%;
+    text-align: center;
+    line-height: 20px;
+    position: absolute;
+    bottom: 12px;
+    left: 0;
+}
+
+.photo-base .rotate-90 {
+    position: relative;
+    left: 100%;
+    transform-origin: top left;
+}
+
+.photo-base .rotate-270 {
+    position: relative;
+    transform-origin: top right;
+}
+
 img {
-    height: 70%;
-    width: auto;
+    height: auto;
+    width: 100%;
 }
 
 .photo-1 {
-    top: 5%;
-    left: 8%;
+    top: 6%;
+    left: 7%;
 }
 
 .photo-2 {
     top: 35%;
-    right: 8%;
+    right: 12%;
 }
 
 .photo-3 {
-    bottom: 5%;
-    left: 8%;
+    bottom: 6%;
+    left: 7%;
 }
 
 .photo-4 {
-    top: 5%;
-    left: 8%;
+    top: 6%;
+    left: 14%;
 }
 
 .photo-5 {
     top: 35%;
-    right: 8%;
+    right: 7%;
 }
 
 .photo-6 {
-    bottom: 5%;
-    left: 8%;
+    bottom: 6%;
+    left: 14%;
 }
 
-
-.bookmark {
-    top: 0;
-    left: 0;
-    z-index: 0;
+.menu {
+    top: 5px;
+    left: 10px;
+    z-index: 2;
     cursor: pointer;
     position: absolute;
     background: rebeccapurple;
     height: 13%;
     width: 5%;
+    transition-duration: 0.5s;
+    transition-property: top, left;
+}
+
+.menu:hover {
+    top: 0;
+    left: 0;
 }
 
 .upload {
+    right: 10px;
+    z-index: 2;
+    cursor: pointer;
+    background: url("/img/upload-photo.png") round;
+    position: absolute;
+    height: 16vh;
+    width: 15vh;
+    min-height: 82px;
+    min-width: 80px;
+    transition-duration: 0.5s;
+    transition-property: top, right;
+    -webkit-transform: rotate(60deg);
+    -moz-transform: rotate(60deg);
+    -ms-transform: rotate(60deg);
+    -o-transform: rotate(60deg);
+    transform: rotate(60deg);
+}
+
+.upload:hover {
     top: 0;
     right: 0;
-    z-index: 0;
-    cursor: pointer;
-    background: salmon;
-    position: absolute;
-    height: 13%;
-    width: 5%;
 }
 
 .upload a {
@@ -230,12 +387,16 @@ a {
 }
 
 a.link{
-    border-bottom: 1px solid #999;
-    color: #555;
+    cursor: pointer;
+    border-bottom: 1px solid rgba(0,0,0,0.6) !important;
+    color: rgba(0,0,0,0.6) !important;
+    transition-duration: 0.2s;
+    transition-property: border;
 }
 
 a.link:hover {
-    color: black;
+    color: black !important;
+    border-color: black !important;
 }
 
 h3 {
@@ -251,9 +412,39 @@ h3 {
     background: url("/img/cover-desk.jpg") round;
 }
 
+.album {
+    background: url("/img/album-bg.jpg") round;
+    background-size: cover;
+}
+
+.album:before {
+    content: '';
+    width: 47%;
+    height: 96%;
+    position: absolute;
+    right: 3%;
+    top: 2%;
+    box-shadow: 10px 5px 10px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
+.album:after {
+    content: '';
+    width: 47%;
+    height: 96%;
+    position: absolute;
+    left: 3%;
+    top: 2%;
+    box-shadow: -10px 5px 10px rgba(0, 0, 0, 0.8);
+    z-index: 1;
+}
+
 .upload-cover {
     height: 100%;
     width: 100%;
+    /*4:3*/
+    min-width: 800px;
+    min-height: 600px;
     position: absolute;
     background-color: rgba(0,0,0,0.4);
     display: none;
@@ -272,6 +463,9 @@ h3 {
     transform: translate(-50%, -50%);
     z-index: 2;
     display: none;
+    -webkit-box-shadow: 10px 10px 10px rgba(0,0,0,0.3);
+    -moz-box-shadow: 10px 10px 10px  rgba(0,0,0,0.3);
+    box-shadow: 10px 10px 10px  rgba(0,0,0,0.3);
 }
 
 .upload-file {
@@ -288,8 +482,9 @@ h3 {
     height: 100%;
     width: 100%;
     display: block;
-    background: #f4f7fc no-repeat center;
+    background: #F8F8F8 no-repeat center;
     background-size: contain;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     color: #999999;
     z-index: 1;
 }
@@ -309,6 +504,25 @@ h3 {
     display: none;
 }
 
+.rotate-90{
+    -webkit-transform:rotate(90deg);
+    -moz-transform:rotate(90deg);
+    -o-transform:rotate(90deg);
+    transform:rotate(90deg);
+}
+.rotate-180{
+    -webkit-transform:rotate(180deg);
+    -moz-transform:rotate(180deg);
+    -o-transform:rotate(180deg);
+    transform:rotate(180deg);
+}
+.rotate-270{
+    -webkit-transform:rotate(270deg);
+    -moz-transform:rotate(270deg);
+    -o-transform:rotate(270deg);
+    transform:rotate(270deg);
+}
+
 .upload-file input {
     position: absolute;
     top: 0;
@@ -317,4 +531,106 @@ h3 {
     height: 100%;
     opacity: 0;
     cursor: pointer;
+}
+
+.upload-info {
+    position: absolute;
+    top: 25px;
+    right: 25px;
+    width: 225px;
+    height: 300px;
+}
+
+.upload-info .error-container {
+    margin: 5px 0 0 0;
+}
+
+.upload-info .error-container p {
+    margin: 5px;
+}
+
+.upload-info-base {
+    padding: 10px 0;
+    width: 100%;
+}
+
+.upload-info-base label {
+    color: rgba(0,0,0,0.6);
+}
+
+.upload-info-base label[for='upload_public'] {
+    padding: 3px;
+    position: absolute;
+}
+
+#upload_original_time, #upload_description {
+    width: 100%;
+    border-radius: 0;
+    border: 0;
+    border-bottom: 1px solid #00A862;
+    background: none;
+    line-height: 25px;
+    padding: 3px 0;
+    outline: none;
+}
+
+.upload-cancel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: none;
+    border: 0;
+    cursor: pointer;
+    padding: 10px;
+    height: 40px;
+    width: 40px;
+}
+
+.fancybox-toolbar {
+    height: 44px;
+}
+
+.fancybox-comments {
+    overflow-y: auto;
+    max-height: 60%;
+}
+
+.fancybox-comments p{
+    margin-top: 0;
+    margin-bottom: 10px;
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.fancybox-up input{
+    width: 100%;
+    margin-top: 5px;
+    line-height: 1.3;
+    padding: 5px;
+}
+
+.fancybox-title{
+    -ms-word-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.fancybox-up .fancybox-opbtn {
+    margin-top: 12px;
+    position: relative;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    display: block;
+}
+
+.fancybox-up .fancybox-opbtn a {
+    position: absolute;
+    bottom: 0;
+    right: 1px;
+}
+
+.fancybox-caption .shooting-time {
+    color: rgba(0,0,0,0.3) !important;
+    font-size: 12px !important;
 }

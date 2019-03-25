@@ -9,6 +9,8 @@ public class UploadInfo {
 
     private String originalTime;
 
+    private int rotate;
+
     public String getDescription() {
         return description;
     }
@@ -25,4 +27,11 @@ public class UploadInfo {
         this.originalTime = originalTime;
     }
 
+    public int getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(int rotate) {
+        this.rotate = rotate;
+    }
 }

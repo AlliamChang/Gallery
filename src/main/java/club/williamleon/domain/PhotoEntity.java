@@ -24,6 +24,12 @@ public class PhotoEntity {
     @Column(name = "name", nullable = false)
     private String name;
 
+    @Column(name = "ratio_wh", nullable = false)
+    private Double rationWH;
+
+    @Column(name = "rotate")
+    private int rotate;
+
     @Column(name = "up_time", nullable = false)
     @Temporal(TemporalType.TIMESTAMP)
     private Date upTime;
@@ -73,6 +79,14 @@ public class PhotoEntity {
         this.name = name;
     }
 
+    public Double getRationWH() {
+        return rationWH;
+    }
+
+    public void setRationWH(Double rationWH) {
+        this.rationWH = rationWH;
+    }
+
     public Date getUpTime() {
         return upTime;
     }
@@ -111,5 +125,13 @@ public class PhotoEntity {
 
     public void setClick(Long click) {
         this.click = click;
+    }
+
+    public int getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(int rotate) {
+        this.rotate = rotate;
     }
 }
