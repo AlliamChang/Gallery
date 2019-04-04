@@ -56,7 +56,7 @@
                 <input id="upload_original_time" type="date" contenteditable="false">
             </div>
             <div class="upload-info-base">
-                <input id="upload_public" type="checkbox"><label for="upload_public">Public</label>
+                <input id="upload_public" type="checkbox" datatype=""><label for="upload_public">Public</label>
             </div>
             <input id="upload_rotate" value="0" hidden>
             <button id="upload-btn" class="gallery-button">Upload</button>
@@ -143,7 +143,7 @@
                 title = data.groupName;
                 role = data.roleInGroup;
                 $(document).attr('title', title);
-                console.log(data);
+                // console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {
                     loadPhoto(i, photos[i].filename, photos[i].title, photos[i].ratioWH, photos[i].rotate);
@@ -161,10 +161,11 @@
             async: false,
             success: function (data) {
                 setCookie('gallery', data.groupId);
+                galleryId = data.groupId;
                 title = data.groupName;
                 role = data.roleInGroup;
                 $(document).attr('title', title);
-                console.log(data);
+                // console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {
                     loadPhoto(i, photos[i].filename, photos[i].title, photos[i].ratioWH, photos[i].rotate);
@@ -202,8 +203,11 @@
                 url: '/gallery/'+galleryId+'/photo',
                 cache: false,
                 processData: false,
-                contentType: false,
+                contentType:false,
                 data: formData,
+                beforeSend: function () {
+
+                },
                 success: function (data) {
                     window.location.reload();
                 },
