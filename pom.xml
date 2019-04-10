@@ -77,6 +77,12 @@
             <artifactId>annotations</artifactId>
             <version>RELEASE</version>
         </dependency>
+
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>[0.4, 0.5)</version>
+        </dependency>
     </dependencies>
 
     <build>

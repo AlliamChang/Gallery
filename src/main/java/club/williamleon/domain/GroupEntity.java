@@ -1,12 +1,18 @@
 package club.williamleon.domain;
 
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by 53068 on 2018/4/27 0027.
  */
 @Entity
 @Table(name = "gallery")
+@EntityListeners(AuditingEntityListener.class)
 public class GroupEntity {
 
     @Id
@@ -25,6 +31,16 @@ public class GroupEntity {
 
     @Column(name = "creator", nullable = false)
     private Long creator;
+
+    @Column(name = "create_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @CreatedDate
+    private Date createTime;
+
+    @Column(name = "update_time")
+    @Temporal(TemporalType.TIMESTAMP)
+    @LastModifiedDate
+    private Date updateTime;
 
     public Long getId() {
         return id;
@@ -51,7 +67,6 @@ public class GroupEntity {
     }
 
     public void setPublic(boolean aPublic) {
-
         isPublic = aPublic;
     }
 
@@ -61,5 +76,21 @@ public class GroupEntity {
 
     public void setCreator(Long creator) {
         this.creator = creator;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

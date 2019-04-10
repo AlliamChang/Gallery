@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class StringUtil {
 
     private final static DateFormat format = new SimpleDateFormat(
-        "yyyyMMddhhmmss");
+        "yyyyMMddHHmmss");
 
     private final static DateFormat formatExif = new SimpleDateFormat(
         "yyyy-MM-dd");

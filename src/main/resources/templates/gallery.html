@@ -11,6 +11,8 @@
     <!--<link rel="stylesheet"-->
     <!--href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.3.5/jquery.fancybox.min.css"/>-->
     <link rel="stylesheet" href="/css/jquery.fancybox.min.css">
+    <link rel="stylesheet" href="/css/ns-default.css">
+    <link rel="stylesheet" href="/css/ns-style-growl.css">
     <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
     <script src="/js/jquery.fancybox.min.js"></script>
     <script src="/js/exif.js"></script>
@@ -19,12 +21,17 @@
     <script src="/js/jquery.bookblock.min.js"></script>
     <script src="/js/jquerypp.custom.js"></script>
     <script src="/js/gallery.js"></script>
+    <script src="/js/notificationFx.js"></script>
+    <script src="/js/classie.js"></script>
 </head>
 <body>
 <div class="container">
     <div class="bb-custom-wrapper album">
         <!--TODO-->
-        <!--<div class="menu" title="Menu"></div>-->
+        <div class="menu" title="Menu">
+            <a href="/list"></a>
+        </div>
+
         <div class="prev-page-btn"></div>
         <div id="bb-bookblock" class="bb-bookblock">
             <div class="bb-item">
@@ -206,13 +213,28 @@
                 contentType:false,
                 data: formData,
                 beforeSend: function () {
-
+                    var notify = new NotificationFx({
+                        wrapper: document.body,
+                        message: '<p>照片正在上传</p>',
+                        layout: 'growl',
+                        effect: 'slide',
+                        type: 'notice'
+                    });
+                    notify.show();
                 },
                 success: function (data) {
                     window.location.reload();
                 },
                 error: function (status) {
                     console.log(status.responseText);
+                    var notifiy = new NotificationFx({
+                        wrapper: document.body,
+                        message: '<p>'+status.responseText+'</p>',
+                        layout: 'growl',
+                        effect: 'slide',
+                        type: 'notice'
+                    });
+                    notifiy.show();
                 }
             });
             hideUpload();

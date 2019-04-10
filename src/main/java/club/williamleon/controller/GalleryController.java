@@ -35,7 +35,7 @@ public class GalleryController {
     }
 
     @GetMapping("/all")
-    public List getCategory() {
+    public List<GroupInfo> getCategory() {
         return groupService.getGroupList();
     }
 

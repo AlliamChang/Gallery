@@ -18,7 +18,7 @@ public interface ImageService {
 
     void init();
 
-    Stream<Path> loadAll();
+//    Stream<Path> loadAll();
 
     Resource loadAsResource(String filename);
 
@@ -32,5 +32,4 @@ public interface ImageService {
 
     ResponseEntity<PhotoDetail> getPhotoDetail(String photoName, Long groupId);
 
-//    void getPhotosByGroup();
 }

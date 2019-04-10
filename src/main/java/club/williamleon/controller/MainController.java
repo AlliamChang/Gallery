@@ -45,17 +45,14 @@ public class MainController {
         return view;
     }
 
-//    @GetMapping("/gallery")
-//    public ModelAndView gallery(@RequestParam("name")String name) {
-//        ModelAndView view = new ModelAndView();
-//
-//        return view;
-//    }
-
     @GetMapping("/files/{filename:.+}")
     public ResponseEntity<Resource> serveFile(@PathVariable String filename) {
         Resource file = imageService.loadAsResource(filename);
-        return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+        if (file == null) {
+            return ResponseEntity.notFound().build();
+        }else {
+            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+                    "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+        }
     }
 }

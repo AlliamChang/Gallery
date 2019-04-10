@@ -15,4 +15,9 @@ public interface GroupRepo extends JpaRepository<GroupEntity, Long> {
         " where u.userId = ?1 and u.groupId = g.id" +
         " order by u.role")
     List<Long> findDefaultGroup(Long userId);
+
+    @Query("select g from GroupEntity g, UserInGroupEntity u" +
+            " where u.userId = ?1 and u.groupId = g.id" +
+            " order by g.createTime")
+    List<GroupEntity> findGroups(Long userId);
 }

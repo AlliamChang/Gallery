@@ -46,4 +46,12 @@ public class GroupInfo {
     public void setPublic(boolean aPublic) {
         isPublic = aPublic;
     }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
 }

@@ -125,12 +125,27 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-    // TODO future feature
     public List<GroupInfo> getGroupList() {
         Long userId = sessionParam.getUserId();
         List<GroupInfo> groups = new ArrayList<>();
         if (userId != null) {
-
+            List<GroupEntity> entities = groupRepo.findGroups(userId);
+            if (entities != null) {
+                for (GroupEntity entity : entities) {
+                    GroupInfo info = new GroupInfo();
+                    info.setId(entity.getId());
+                    info.setDescription(entity.getDescription());
+                    info.setName(entity.getName());
+                    List<String> photos = photoRepo.findGalleryCover(info.getId());
+                    if (photos != null && photos.size() > 0) {
+                        info.setCover(photos.get(0));
+                    } else {
+                        info.setCover("");
+                    }
+                    groups.add(info);
+                }
+            }
+            // TODO future feature: Add the public galleries
         }
         return groups;
     }

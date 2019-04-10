@@ -1,11 +1,4 @@
 ;
-// function bookmark() {
-//     $('#menu-page').removeAttr('hidden');
-//     $('#menu-page').addClass('bb-item');
-//     $('#bb-bookblock').bookblock('update');
-//     $('#bb-bookblock').bookblock('first');
-// }
-
 function addRotate($image, rotate) {
     if(rotate == 0 || rotate == 90
         || rotate == 180 || rotate == 270) {
@@ -14,6 +7,47 @@ function addRotate($image, rotate) {
         $image.removeClass('rotate-180');
         $image.removeClass('rotate-270');
         $image.addClass('rotate-' + rotate);
+    }
+}
+
+function loadGalleries(i, id, cover, title) {
+    $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
+    $photo = $('<div class="photo-base gallery-cover"> <a name=""><img></a> <p id="title"></p> </div>');
+    var page = parseInt(i / 8),
+        pos = i % 8;
+
+    if (page > 0 && pos == 0) {
+        $(".bb-bookblock").append($page);
+    }
+
+    if (pos % 4 < 2) {
+        $photo.addClass("top");
+    } else {
+        $photo.addClass("bottom");
+    }
+    if (pos % 2 == 0) {
+        if (pos < 4) {
+            $photo.css('left', '6%');
+        } else {
+            $photo.css('left', '13%');
+        }
+    } else {
+        if (pos < 4) {
+            $photo.css('right', '12%');
+        } else {
+            $photo.css('right', '5%');
+        }
+    }
+    if (cover.length > 0) {
+        $photo.find("img").attr("src", "/files/"+cover);
+    }
+    $photo.children("a").attr("name", id);
+    $photo.children("#title").text(title);
+
+    if (pos < 4) {
+        $($(".bb-item")[page]).children(".left-page").append($photo);
+    }else {
+        $($(".bb-item")[page]).children(".right-page").append($photo);
     }
 }
 
@@ -32,13 +66,13 @@ function loadPhoto(i, filename, title, ratioWH, rotate) {
     $photo.children("a").attr("href", "/files/"+filename);
     $photo.children("#title").text(title);
 
-    // total area: 30 * 30
+    // total area
     var area = 28 * 28;
     if (ratioWH > 0) {
-        var height = Math.sqrt(area / ratioWH);
+        var height = Math.sqrt(area / ratioWH) * 0.48;
         var width = height * ratioWH;
-        $photo.css('height', height + '%');
-        $photo.css('width', width + '%');
+        $photo.css('height', height + 'vw');
+        $photo.css('width', width + 'vw');
         addRotate($photo.find('img'), rotate);
     }
 

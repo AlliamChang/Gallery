@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="author" content="Aven">
+    <title>Your Galleries</title>
+    <link rel="shortcut icon" href="/img/cloud.ico">
+    <link rel="stylesheet" href="/css/base.css">
+    <link rel="stylesheet" href="/css/bookblock.css">
+    <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="/js/modernizr.custom.js"></script>
+    <script src="/js/jquery.bookblock.min.js"></script>
+    <script src="/js/gallery.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="bb-custom-wrapper album">
+        <!--TODO-->
+        <!--<div class="menu" title="Menu"><a></a></div>-->
+        <div class="prev-page-btn"></div>
+        <div id="bb-bookblock" class="bb-bookblock">
+            <div class="bb-item">
+                <div class="left-page"></div>
+                <div class="right-page"></div>
+            </div>
+        </div>
+        <div class="next-page-btn"></div>
+        <!--<div class="upload" title="Upload Photo">-->
+            <!--<a onclick="showUpload()"></a>-->
+        <!--</div>-->
+    </div>
+</div>
+</body>
+<script>
+    var Page = (function () {
+        var config = {
+                $bookBlock: $('#bb-bookblock'),
+                $prev: $('.prev-page-btn'),
+                $next: $('.next-page-btn')
+            },
+            init = function () {
+                config.$bookBlock.bookblock({
+                    speed: 800,
+                    shadowSides: 0.8,
+                    shadowFlip: 0.7
+                });
+                initEvents();
+            },
+            initEvents = function () {
+                var $slides = config.$bookBlock.children();
+
+                config.$prev.on('click', function () {
+                    config.$bookBlock.bookblock('prev');
+                    return false;
+                });
+
+                config.$next.on('click', function () {
+                    config.$bookBlock.bookblock('next');
+                    return false;
+                });
+
+                // config.$bookmark.on('click', function () {
+                //     config.$bookBlock.bookblock('first');
+                // });
+
+                // add swipe events
+                $slides.on({
+                    'swipeleft': function (event) {
+                        config.$bookBlock.bookblock('next');
+                        return false;
+                    },
+                    'swiperight': function (event) {
+                        config.$bookBlock.bookblock('prev');
+                        return false;
+                    }
+                });
+            };
+
+        return {init: init};
+    })();
+</script>
+<script>
+    $(function () {
+        delCookie('gallery');
+        $.ajax({
+            type: 'GET',
+            url: '/gallery/all',
+            async: false,
+            success: function (data) {
+                if (data.length > 0) {
+                    for (var i = 0; i < data.length; i++) {
+                        loadGalleries(i, data[i].id, data[i].cover, data[i].name);
+                    }
+                }
+            },
+            error: function (status) {
+                handleError(status);
+                console.log(status.responseText);
+            }
+        });
+
+        Page.init();
+
+        $('a').click(function () {
+            var id = $(this).attr('name');
+            setCookie('gallery', id);
+            window.location.replace('/');
+        })
+    })
+</script>
+</html>

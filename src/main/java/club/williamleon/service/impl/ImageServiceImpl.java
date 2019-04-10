@@ -14,6 +14,7 @@ import club.williamleon.service.ImageService;
 import club.williamleon.util.MD5;
 import club.williamleon.util.StringUtil;
 import club.williamleon.util.val.GroupRole;
+import net.coobird.thumbnailator.Thumbnails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -100,7 +101,38 @@ public class ImageServiceImpl implements ImageService {
         String uploaderMd5 = MD5.digest(filename);
         filename = date.concat(uploaderMd5).concat(".").concat(photoType);
         // store
-        if(this.store(photo, filename)){
+        boolean isStored = false;
+        if (photo.getSize() > 1024 * 1024 * 1 ) {
+            double quality = .8f, scale = 1f;
+            if (photo.getSize() > 1024 * 1024 * 2) {
+                quality = .6f;
+            }
+            if (photo.getSize() > 1024 * 1024 * 8) {
+                quality = .4f;
+            }
+            if (photoType.equals("png")) {
+                scale = quality;
+                quality = 1f;
+            }
+            try {
+                Thumbnails
+                        .of(photo.getInputStream())
+                        .scale(scale)
+                        .outputQuality(quality)
+                        .toFile("img/" + filename);
+                isStored = true;
+                // also store the original size of photo
+                this.store(photo, filename + ".origin");
+            } catch (IOException e) {
+                logger.error(e.getMessage());
+                isStored = false;
+            }
+        } else {
+            isStored = this.store(photo, filename);
+        }
+
+
+        if(isStored){
             PhotoEntity entity = new PhotoEntity();
             Date originalTime = null;
             try {
@@ -210,14 +242,14 @@ public class ImageServiceImpl implements ImageService {
         return new ResponseEntity<>(detail, HttpStatus.OK);
     }
 
-    @Override
-    public Stream<Path> loadAll() {
-        List<String> names = photoRepo.findPhotoNames();
-        List<Path> paths = new ArrayList<>();
-        if (names != null) {
-            names.forEach(name -> paths.add(rootLocation.resolve(name)));
-        }
-        return paths.stream();
+//    @Override
+//    public Stream<Path> loadAll() {
+//        List<String> names = photoRepo.findPhotoNames();
+//        List<Path> paths = new ArrayList<>();
+//        if (names != null) {
+//            names.forEach(name -> paths.add(rootLocation.resolve(name)));
+//        }
+//        return paths.stream();
 
         // 官方方法
 //            return Files.walk(this.rootLocation, 1)
@@ -227,7 +259,7 @@ public class ImageServiceImpl implements ImageService {
 //            System.out.println("load fail");
 //            return null;
 //        }
-    }
+//    }
 
     @Override
     public Resource loadAsResource(String filename) {
@@ -237,7 +269,7 @@ public class ImageServiceImpl implements ImageService {
             if (resource.exists() || resource.isReadable()) {
                 return resource;
             } else {
-                logger.warn("File: {} doesn't exist.");
+                logger.warn("File: {} doesn't exist.", filename);
                 return null;
             }
         } catch (MalformedURLException e) {

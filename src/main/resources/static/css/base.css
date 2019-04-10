@@ -227,7 +227,8 @@ body {
 }
 
 .photo-base {
-    height: 40%;
+    width: 15vw;
+    height: 15vw;
     background: rgb(247, 247, 247);
     position: absolute;
     box-sizing: content-box;
@@ -286,6 +287,20 @@ img {
     width: 100%;
 }
 
+.gallery-cover img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+}
+
+.gallery-cover.top {
+    top: 6%;
+}
+
+.gallery-cover.bottom {
+    bottom: 6%;
+}
+
 .photo-1 {
     top: 6%;
     left: 7%;
@@ -317,7 +332,7 @@ img {
 }
 
 .menu {
-    top: 5px;
+    top: 0;
     left: 10px;
     z-index: 2;
     cursor: pointer;
@@ -330,11 +345,19 @@ img {
 }
 
 .menu:hover {
-    top: 0;
     left: 0;
 }
 
+.menu a {
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+}
+
 .upload {
+    top: 0;
     right: 10px;
     z-index: 2;
     cursor: pointer;
@@ -354,7 +377,6 @@ img {
 }
 
 .upload:hover {
-    top: 0;
     right: 0;
 }
 
