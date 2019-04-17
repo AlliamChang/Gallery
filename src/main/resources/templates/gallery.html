@@ -117,10 +117,6 @@
                     return false;
                 });
 
-                // config.$bookmark.on('click', function () {
-                //     config.$bookBlock.bookblock('first');
-                // });
-
                 // add swipe events
                 $slides.on({
                     'swipeleft': function (event) {
@@ -130,6 +126,24 @@
                     'swiperight': function (event) {
                         config.$bookBlock.bookblock('prev');
                         return false;
+                    }
+                });
+
+                // add keyboard events
+                $( document ).keydown( function(e) {
+                    var keyCode = e.keyCode || e.which,
+                        arrow = {
+                            left : 37,
+                            right : 39
+                        };
+
+                    switch (keyCode) {
+                        case arrow.left:
+                            config.$bookBlock.bookblock( 'first' );
+                            break;
+                        case arrow.right:
+                            config.$bookBlock.bookblock( 'last' );
+                            break;
                     }
                 });
             };
