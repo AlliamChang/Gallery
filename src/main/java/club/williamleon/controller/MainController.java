@@ -8,9 +8,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBuilder;
 
-import java.util.stream.Collectors;
+import java.io.IOException;
 
 /**
  * Created by 53068 on 2018/4/9 0009.
@@ -51,8 +50,13 @@ public class MainController {
         if (file == null) {
             return ResponseEntity.notFound().build();
         }else {
-            return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-                    "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+            try {
+                return ResponseEntity.ok().lastModified(file.lastModified()).header(HttpHeaders.CONTENT_DISPOSITION,
+                        "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return ResponseEntity.badRequest().build();
+            }
         }
     }
 }

@@ -136,11 +136,19 @@ public class GroupServiceImpl implements GroupService {
                     info.setId(entity.getId());
                     info.setDescription(entity.getDescription());
                     info.setName(entity.getName());
-                    List<String> photos = photoRepo.findGalleryCover(info.getId());
-                    if (photos != null && photos.size() > 0) {
-                        info.setCover(photos.get(0));
+                    if (!StringUtils.isEmpty(entity.getCover())) {
+                        info.setCover(entity.getCover());
+                        info.setRotate(entity.getRotate());
                     } else {
-                        info.setCover("");
+                        List<Object[]> photos = photoRepo.findGalleryCover(info.getId());
+                        // the oldest one is the cover when the cover is not set
+                        if (photos != null && photos.size() > 0) {
+                            info.setCover((String) photos.get(0)[0]);
+                            info.setRotate((int) photos.get(0)[1]);
+                        } else {
+                            // default logo when no photo in gallery
+                            info.setCover("");
+                        }
                     }
                     groups.add(info);
                 }

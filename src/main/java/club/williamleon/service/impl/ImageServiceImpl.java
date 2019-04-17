@@ -102,6 +102,7 @@ public class ImageServiceImpl implements ImageService {
         filename = date.concat(uploaderMd5).concat(".").concat(photoType);
         // store
         boolean isStored = false;
+        int finalRotate = info.getRotate();
         if (photo.getSize() > 1024 * 1024 * 1 ) {
             double quality = .8f, scale = 1f;
             if (photo.getSize() > 1024 * 1024 * 2) {
@@ -120,6 +121,8 @@ public class ImageServiceImpl implements ImageService {
                         .scale(scale)
                         .outputQuality(quality)
                         .toFile("img/" + filename);
+                // rotate will turn to zero after compressing
+                finalRotate = 0;
                 isStored = true;
                 // also store the original size of photo
                 this.store(photo, filename + ".origin");
@@ -160,7 +163,7 @@ public class ImageServiceImpl implements ImageService {
             entity.setOriginTime(originalTime);
             entity.setDescription(info.getDescription());
             entity.setClick(0L);
-            entity.setRotate(info.getRotate());
+            entity.setRotate(finalRotate);
             entity.setName(filename);
             photoRepo.save(entity);
 
@@ -168,11 +171,11 @@ public class ImageServiceImpl implements ImageService {
                 return new ResponseEntity<>("Upload success!", HttpStatus.OK);
             }else {
                 return new ResponseEntity<>("Record save failed",
-                    HttpStatus.ACCEPTED);
+                    HttpStatus.INTERNAL_SERVER_ERROR);
             }
         }else {
             return new ResponseEntity<>("Store failed",
-                HttpStatus.ACCEPTED);
+                HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

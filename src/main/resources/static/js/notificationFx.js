@@ -21,7 +21,8 @@
 			'animation' : 'animationend'
 		},
 		// animation end event name
-		animEndEventName = animEndEventNames[ Modernizr.prefixed( 'animation' ) ];
+		animEndEventName = animEndEventNames[ Modernizr.prefixed( 'animation' ) ],
+        count = 1;
 	
 	/**
 	 * extend obj function
@@ -80,6 +81,7 @@
 		// create HTML structure
 		this.ntf = document.createElement( 'div' );
 		this.ntf.className = 'ns-box ns-' + this.options.layout + ' ns-effect-' + this.options.effect + ' ns-type-' + this.options.type;
+		this.ntf.style = 'z-index: ' + count;
 		var strinner = '<div class="ns-box-inner">';
 		strinner += this.options.message;
 		strinner += '</div>';
@@ -99,6 +101,7 @@
 
 		// init events
 		this._initEvents();
+		count ++;
 	}
 
 	/**
@@ -141,7 +144,7 @@
 				if( ev.target !== self.ntf ) return false;
 				this.removeEventListener( animEndEventName, onEndAnimationFn );
 			}
-			self.options.wrapper.removeChild( this );
+			self.options.wrapper.removeChild( self.ntf );
 		};
 
 		if( support.animations ) {

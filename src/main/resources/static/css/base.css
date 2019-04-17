@@ -57,6 +57,30 @@ body {
     z-index: 3;
 }
 
+.bb-custom-wrapper .bb-bookblock:before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 12vh;
+    width: 12vh;
+    min-height: 72px;
+    min-width: 72px;
+    box-shadow: -2px -1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.bb-custom-wrapper .bb-bookblock:after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 16vh;
+    width: 15vh;
+    min-height: 82px;
+    min-width: 80px;
+    box-shadow: 2px -1px 2px rgba(0, 0, 0, 0.5);
+}
+
 .bb-item {
     width: 100%;
     height: 100%;
@@ -233,7 +257,7 @@ body {
     position: absolute;
     box-sizing: content-box;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-    padding: 2% 2% 46px 2%;
+    padding: 2% 2% 40px 2%;
     cursor: pointer;
 }
 
@@ -267,7 +291,7 @@ body {
     text-align: center;
     line-height: 20px;
     position: absolute;
-    bottom: 12px;
+    bottom: 10px;
     left: 0;
 }
 
@@ -337,11 +361,18 @@ img {
     z-index: 2;
     cursor: pointer;
     position: absolute;
-    background: rebeccapurple;
-    height: 13%;
-    width: 5%;
+    background: url("/img/menu.png") round;
+    height: 12vh;
+    width: 12vh;
+    min-height: 72px;
+    min-width: 72px;
     transition-duration: 0.5s;
     transition-property: top, left;
+    -webkit-transform: rotate(-60deg);
+    -moz-transform: rotate(-60deg);
+    -ms-transform: rotate(-60deg);
+    -o-transform: rotate(-60deg);
+    transform: rotate(-60deg);
 }
 
 .menu:hover {
@@ -436,6 +467,7 @@ h3 {
 
 .album {
     background: url("/img/album-bg.jpg") round;
+    background-color: black;
     background-size: cover;
 }
 

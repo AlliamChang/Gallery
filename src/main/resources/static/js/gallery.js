@@ -10,7 +10,7 @@ function addRotate($image, rotate) {
     }
 }
 
-function loadGalleries(i, id, cover, title) {
+function loadGalleries(i, id, cover, title, rotate) {
     $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
     $photo = $('<div class="photo-base gallery-cover"> <a name=""><img></a> <p id="title"></p> </div>');
     var page = parseInt(i / 8),
@@ -40,6 +40,7 @@ function loadGalleries(i, id, cover, title) {
     }
     if (cover.length > 0) {
         $photo.find("img").attr("src", "/files/"+cover);
+        addRotate($photo.find("img"), rotate);
     }
     $photo.children("a").attr("name", id);
     $photo.children("#title").text(title);
@@ -145,6 +146,14 @@ function uploadComment() {
                 });
                 $('.fancybox-comments').html(newComments);
                 $('.fancybox-up').children('#comment').val('');
+            }else {
+                var notifiy = new NotificationFx({
+                    message: '<p>评论失败</p>',
+                    layout: 'growl',
+                    effect: 'slide',
+                    type: 'notice'
+                });
+                notifiy.show();
             }
         },
         error: function (status) {

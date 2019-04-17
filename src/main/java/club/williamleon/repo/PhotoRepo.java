@@ -20,10 +20,10 @@ public interface PhotoRepo extends JpaRepository<PhotoEntity, Long> {
         " where p.groupId = ?1 order by p.originTime")
     List<PhotoEntity> findPhotoInfo(Long groupId);
 
-    @Query("select p.name" +
+    @Query("select p.name, p.rotate" +
             " from PhotoEntity p" +
             " where p.groupId = ?1 and p.rotate = 0 order by p.originTime")
-    List<String> findGalleryCover(Long groupId);
+    List<Object[]> findGalleryCover(Long groupId);
 
     PhotoEntity findByName(String name);
 

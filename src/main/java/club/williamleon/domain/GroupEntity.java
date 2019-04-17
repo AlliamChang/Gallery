@@ -26,6 +26,12 @@ public class GroupEntity {
     @Column(name = "description", nullable = false)
     private String description;
 
+    @Column(name = "cover")
+    private String cover;
+
+    @Column(name = "rotate")
+    private int rotate;
+
     @Column(name = "is_public")
     private boolean isPublic;
 
@@ -92,5 +98,21 @@ public class GroupEntity {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getCover() {
+        return cover;
+    }
+
+    public void setCover(String cover) {
+        this.cover = cover;
+    }
+
+    public int getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(int rotate) {
+        this.rotate = rotate;
     }
 }

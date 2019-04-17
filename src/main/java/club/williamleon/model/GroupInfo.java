@@ -15,6 +15,8 @@ public class GroupInfo {
 
     private String cover;
 
+    private int rotate;
+
     public Long getId() {
         return id;
     }
@@ -53,5 +55,13 @@ public class GroupInfo {
 
     public void setCover(String cover) {
         this.cover = cover;
+    }
+
+    public int getRotate() {
+        return rotate;
+    }
+
+    public void setRotate(int rotate) {
+        this.rotate = rotate;
     }
 }
