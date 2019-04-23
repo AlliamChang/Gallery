@@ -1,5 +1,6 @@
 package club.williamleon.service.impl;
 
+import club.williamleon.config.Constant;
 import club.williamleon.config.FileProperties;
 import club.williamleon.config.SessionParam;
 import club.williamleon.domain.CommentEntity;
@@ -93,8 +94,9 @@ public class ImageServiceImpl implements ImageService {
         String filename = photo.getOriginalFilename();
         String[] temp= filename.split("\\.");
         String photoType = temp[temp.length - 1];
-        if (!"jpg".equals(photoType)) {
-            // TODO check the type of file
+        if (!Constant.IMG_EXT.contains(photoType)) {
+            logger.error("User {} upload a file of {}", userId, photoType);
+            return new ResponseEntity<>("\""+filename+"\"" + " is not a photo. ", HttpStatus.BAD_REQUEST);
         }
 
         String date = StringUtil.formatDate(new Date());

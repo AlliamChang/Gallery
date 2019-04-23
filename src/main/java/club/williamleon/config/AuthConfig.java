@@ -24,9 +24,7 @@ public class AuthConfig implements WebMvcConfigurer {
 
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
-        registry.addViewController("/browse").setViewName("gallery");
-//        registry.addViewController("/upload").setViewName("upload");
-        registry.addViewController("/category").setViewName("category");
+        registry.addViewController("/album").setViewName("gallery");
         registry.addViewController("/personal").setViewName("personal_info");
         registry.addViewController("/register").setViewName("register");
         registry.addViewController("/creator").setViewName("gallery_creator");

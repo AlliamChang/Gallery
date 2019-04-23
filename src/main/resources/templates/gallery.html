@@ -93,12 +93,13 @@
                         return false;
                     },
                     onEndFlip: function (old, page, isLimit) {
-                        // var $menuPage = $('#menu-page');
-                        // if (!$menuPage.is(':hidden')) {
-                        //     $menuPage.attr('hidden', '');
-                        //     $menuPage.removeClass('bb-item');
-                        //     config.$bookBlock.bookblock('update');
-                        // }
+                        // preload two page
+                        if (page > 0) {
+                            lazyLoadPhoto($(config.$bookBlock.children('.bb-item')[page]));
+                            if (!isLimit) {
+                                lazyLoadPhoto($(config.$bookBlock.children('.bb-item')[page+1]));
+                            }
+                        }
                         return false;
                     }
                 });
@@ -134,14 +135,22 @@
                     var keyCode = e.keyCode || e.which,
                         arrow = {
                             left : 37,
-                            right : 39
+                            up : 38,
+                            right : 39,
+                            down : 40
                         };
 
                     switch (keyCode) {
                         case arrow.left:
-                            config.$bookBlock.bookblock( 'first' );
+                            config.$bookBlock.bookblock( 'prev' );
                             break;
                         case arrow.right:
+                            config.$bookBlock.bookblock( 'next' );
+                            break;
+                        case arrow.up:
+                            config.$bookBlock.bookblock( 'first' );
+                            break;
+                        case arrow.down:
                             config.$bookBlock.bookblock( 'last' );
                             break;
                     }

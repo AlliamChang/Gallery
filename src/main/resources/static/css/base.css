@@ -101,7 +101,7 @@ body {
     height: 100%;
     right: 0;
     float: left;
-    background: url("/img/album-cover.png") round;
+    background: url("/files/album-cover.png") round;
     background-size: cover;
     position: absolute;
 }
@@ -462,11 +462,11 @@ h3 {
 }
 
 .desk {
-    background: url("/img/cover-desk.jpg") round;
+    background: url("/files/cover-desk.jpg") round;
 }
 
 .album {
-    background: url("/img/album-bg.jpg") round;
+    background: url("/files/album-bg.jpg") round;
     background-color: black;
     background-size: cover;
 }

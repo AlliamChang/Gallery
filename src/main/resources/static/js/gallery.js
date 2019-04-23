@@ -39,7 +39,10 @@ function loadGalleries(i, id, cover, title, rotate) {
         }
     }
     if (cover.length > 0) {
-        $photo.find("img").attr("src", "/files/"+cover);
+        // preload two page
+        if(page <= 1) {
+            $photo.find("img").attr("src", "/files/" + cover);
+        }
         addRotate($photo.find("img"), rotate);
     }
     $photo.children("a").attr("name", id);
@@ -63,7 +66,10 @@ function loadPhoto(i, filename, title, ratioWH, rotate) {
     }
 
     $photo.addClass("photo-"+(pos+1));
-    $photo.find("img").attr("src", "/files/"+filename);
+    // preload two page
+    if(page <= 1) {
+        $photo.find("img").attr("src", "/files/"+filename);
+    }
     $photo.children("a").attr("href", "/files/"+filename);
     $photo.children("#title").text(title);
 
@@ -90,6 +96,19 @@ function loadPhoto(i, filename, title, ratioWH, rotate) {
     }else {
         $($(".bb-item")[page]).children(".right-page").append($photo);
     }
+}
+
+function lazyLoadPhoto($page) {
+    if ($page.hasClass('init')) {
+        return;
+    }
+    var $item = $page.find('.photo-base');
+    if ($item.length > 0) {
+        $item.each(function (index, e) {
+            $(e).find('img').attr('src', $(e).children('a').attr('href'));
+        })
+    }
+    $page.addClass('init')
 }
 
 
