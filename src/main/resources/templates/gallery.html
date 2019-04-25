@@ -290,7 +290,7 @@
                 // return '<h3>home</h3><p>interiors, exteriors, and the humans that inhabit them.</p><p><a href="https://unsplash.com/collections/curated/162" target="_blank">unsplash.com</a></p>';
             },
             afterShow: function (instance, slide) {
-                var file = instance.current['src'].split('/')[2];
+                var file = slide.src.split('/')[2];
                 $.ajax({
                     type: 'GET',
                     url: '/gallery/photo/' + file + '?group=' + galleryId,
@@ -321,14 +321,19 @@
                             '<p class="shooting-time">拍摄于'+data.originalDate+'</p>';
                         instance.$refs.container.find('.fancybox-caption')
                             .html(comments);
-                        var $image = instance.$refs.container.find('.fancybox-image');
+                        var $image = slide.$image;
+                        if (isSafari() && data.rotate%180 == 90) {
+                            var tmp = slide.$content.css('height');
+                            slide.$content.css('height', slide.$content.css('width'));
+                            slide.$content.css('width', tmp);
+                        }
                         addRotate($image, data.rotate);
                     },
                     error: function (status) {
                         handleError(status);
                         console.log(status.responseText);
                     }
-                })
+                });
             }
         });
 

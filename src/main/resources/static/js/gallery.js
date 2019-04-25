@@ -1,5 +1,14 @@
 ;
+function isSafari() {
+    var ua = window.navigator.userAgent;
+    return ua.indexOf("Safari") != -1 && ua.indexOf("Version") != -1;
+}
+
 function addRotate($image, rotate) {
+    // safari don't need to transform
+    if(isSafari()) {
+        return;
+    }
     if(rotate == 0 || rotate == 90
         || rotate == 180 || rotate == 270) {
         $image.removeClass('rotate-0');
@@ -43,6 +52,7 @@ function loadGalleries(i, id, cover, title, rotate) {
         if(page <= 1) {
             $photo.find("img").attr("src", "/files/" + cover);
         }
+
         addRotate($photo.find("img"), rotate);
     }
     $photo.children("a").attr("name", id);
@@ -80,15 +90,17 @@ function loadPhoto(i, filename, title, ratioWH, rotate) {
         var width = height * ratioWH;
         $photo.css('height', height + 'vw');
         $photo.css('width', width + 'vw');
-        addRotate($photo.find('img'), rotate);
-    }
+        if(!isSafari()) {
+            addRotate($photo.find('img'), rotate);
 
-    if (rotate == 90 || rotate == 270) {
-        $photo.find('img').css('width', (100 / ratioWH) + '%');
-    }
+            if (rotate == 90 || rotate == 270) {
+                $photo.find('img').css('width', (100 / ratioWH) + '%');
+            }
 
-    if (rotate == 270){
-        $photo.find('img').css('right', (100 / ratioWH) + '%');
+            if (rotate == 270){
+                $photo.find('img').css('right', (100 / ratioWH) + '%');
+            }
+        }
     }
 
     if (pos < 3) {
