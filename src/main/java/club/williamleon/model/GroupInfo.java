@@ -11,6 +11,10 @@ public class GroupInfo {
 
     private String description;
 
+    private String creator;
+
+    private String createTime;
+
     private boolean isPublic;
 
     private String cover;
@@ -63,5 +67,21 @@ public class GroupInfo {
 
     public void setRotate(int rotate) {
         this.rotate = rotate;
+    }
+
+    public String getCreator() {
+        return creator;
+    }
+
+    public void setCreator(String creator) {
+        this.creator = creator;
+    }
+
+    public String getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(String createTime) {
+        this.createTime = createTime;
     }
 }

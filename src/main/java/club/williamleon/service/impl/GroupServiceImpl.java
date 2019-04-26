@@ -12,6 +12,7 @@ import club.williamleon.repo.PhotoRepo;
 import club.williamleon.repo.UserInGroupRepo;
 import club.williamleon.repo.UserRepo;
 import club.williamleon.service.GroupService;
+import club.williamleon.util.StringUtil;
 import club.williamleon.util.val.GroupRole;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -136,6 +137,9 @@ public class GroupServiceImpl implements GroupService {
                     info.setId(entity.getId());
                     info.setDescription(entity.getDescription());
                     info.setName(entity.getName());
+                    String creator = userRepo.findUsernameById(entity.getCreator());
+                    info.setCreator(creator==null?"":creator);
+                    info.setCreateTime(StringUtil.formatDateTime(entity.getCreateTime()));
                     if (!StringUtils.isEmpty(entity.getCover())) {
                         info.setCover(entity.getCover());
                         info.setRotate(entity.getRotate());
@@ -198,6 +202,7 @@ public class GroupServiceImpl implements GroupService {
             GroupEntity group = groupRepo.findById(groupId).get();
             GroupDetail detail = new GroupDetail();
             detail.setGroupName(group.getName());
+            detail.setGroupDesc(group.getDescription());
             detail.setGroupId(groupId);
             detail.setRoleInGroup(roleInGroup.get().getRole().label());
             List<PhotoEntity> photos = photoRepo.findPhotoInfo(groupId);

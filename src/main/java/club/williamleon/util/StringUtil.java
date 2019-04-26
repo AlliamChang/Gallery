@@ -18,6 +18,9 @@ public class StringUtil {
     private final static DateFormat formatExif = new SimpleDateFormat(
         "yyyy-MM-dd");
 
+    private final static DateFormat formatDateTime = new SimpleDateFormat(
+            "yyyy-MM-dd HH:mm:ss");
+
     private final static String EMAIL_REGEX = "^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+";
 
     public static boolean isEmail(String str) {
@@ -28,6 +31,10 @@ public class StringUtil {
 
     public static String formatDate(Date date) {
         return format.format(date);
+    }
+
+    public static String formatDateTime(Date date) {
+        return formatDateTime.format(date);
     }
 
     public static String formatExifDate(Date date) {

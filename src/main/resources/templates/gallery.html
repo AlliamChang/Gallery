@@ -25,7 +25,6 @@
 <body>
 <div class="container">
     <div class="bb-custom-wrapper album">
-        <!--TODO-->
         <div class="menu" title="Gallery List">
             <a href="/list"></a>
         </div>
@@ -171,8 +170,9 @@
             async: false,
             success: function (data) {
                 title = data.groupName;
+                desc = data.groupDesc;
                 role = data.roleInGroup;
-                $(document).attr('title', title);
+                $(document).attr('title', title+((desc != null && desc.length > 0)? " - "+desc : ""));
                 // console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {
@@ -193,8 +193,9 @@
                 setCookie('gallery', data.groupId);
                 galleryId = data.groupId;
                 title = data.groupName;
+                desc = data.groupDesc;
                 role = data.roleInGroup;
-                $(document).attr('title', title);
+                $(document).attr('title', title+((desc != null && desc.length > 0)? " - "+desc : ""));
                 // console.log(data);
                 var photos = data.photos;
                 for (var i = 0; i < photos.length; i++) {

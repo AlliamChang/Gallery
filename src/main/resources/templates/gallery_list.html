@@ -111,7 +111,8 @@
             success: function (data) {
                 if (data.length > 0) {
                     for (var i = 0; i < data.length; i++) {
-                        loadGalleries(i, data[i].id, data[i].cover, data[i].name, data[i].rotate);
+                        loadGalleries(i, data[i].id, data[i].cover, data[i].name,
+                            data[i].rotate, data[i].description, data[i].creator, data[i].createTime);
                     }
                 }
             },

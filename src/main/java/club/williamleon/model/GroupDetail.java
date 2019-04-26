@@ -14,6 +14,8 @@ public class GroupDetail {
 
     private String groupName;
 
+    private String groupDesc;
+
     private String roleInGroup;
 
     private boolean canAddUser;
@@ -80,6 +82,14 @@ public class GroupDetail {
 
     public void setPhotos(List<PhotoDetail> photos) {
         this.photos = photos;
+    }
+
+    public String getGroupDesc() {
+        return groupDesc;
+    }
+
+    public void setGroupDesc(String groupDesc) {
+        this.groupDesc = groupDesc;
     }
 
     public void addPhoto(String name, String description, Double ratioWH, int rotate) {

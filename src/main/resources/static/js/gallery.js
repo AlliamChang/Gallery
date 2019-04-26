@@ -19,9 +19,9 @@ function addRotate($image, rotate) {
     }
 }
 
-function loadGalleries(i, id, cover, title, rotate) {
+function loadGalleries(i, id, cover, title, rotate, desc, creator, createTime) {
     $page = $('<div class="bb-item"><div class="left-page"></div><div class="right-page"></div></div>');
-    $photo = $('<div class="photo-base gallery-cover"> <a name=""><img></a> <p id="title"></p> </div>');
+    $gallery = $('<div class="photo-base gallery-cover"> <a name=""><img></a> <p id="title"></p> </div>');
     var page = parseInt(i / 8),
         pos = i % 8;
 
@@ -30,38 +30,39 @@ function loadGalleries(i, id, cover, title, rotate) {
     }
 
     if (pos % 4 < 2) {
-        $photo.addClass("top");
+        $gallery.addClass("top");
     } else {
-        $photo.addClass("bottom");
+        $gallery.addClass("bottom");
     }
     if (pos % 2 == 0) {
         if (pos < 4) {
-            $photo.css('left', '6%');
+            $gallery.css('left', '6%');
         } else {
-            $photo.css('left', '13%');
+            $gallery.css('left', '13%');
         }
     } else {
         if (pos < 4) {
-            $photo.css('right', '12%');
+            $gallery.css('right', '12%');
         } else {
-            $photo.css('right', '5%');
+            $gallery.css('right', '5%');
         }
     }
     if (cover.length > 0) {
         // preload two page
         if(page <= 1) {
-            $photo.find("img").attr("src", "/files/" + cover);
+            $gallery.find("img").attr("src", "/files/" + cover);
         }
 
-        addRotate($photo.find("img"), rotate);
+        addRotate($gallery.find("img"), rotate);
     }
-    $photo.children("a").attr("name", id);
-    $photo.children("#title").text(title);
+    $gallery.children("a").attr("name", id);
+    $gallery.children("#title").text(title);
+    $gallery.attr('title', '描述: '+desc+'\n创建者: '+creator+'\n创建时间: '+createTime)
 
     if (pos < 4) {
-        $($(".bb-item")[page]).children(".left-page").append($photo);
+        $($(".bb-item")[page]).children(".left-page").append($gallery);
     }else {
-        $($(".bb-item")[page]).children(".right-page").append($photo);
+        $($(".bb-item")[page]).children(".right-page").append($gallery);
     }
 }
 

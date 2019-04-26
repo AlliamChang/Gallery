@@ -62,13 +62,6 @@ public class GalleryController {
         return new ResponseEntity<>("Invite success!", HttpStatus.OK);
     }
 
-    // TODO auto accept?
-    @GetMapping("/{id}/accept")
-    public ResponseEntity accept() {
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
     public ResponseEntity<GroupDetail> getGalleryPhotos(@PathVariable Long id) {
         ResponseEntity<GroupDetail> groupDetail = groupService.enterGroup(id);
@@ -103,13 +96,13 @@ public class GalleryController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity deleteGallery(@PathVariable String id) {
-
+        // TODO
         return null;
     }
 
     @PutMapping("/{id}")
     public ResponseEntity quitGallery() {
-
+        // TODO
         return null;
     }
 
