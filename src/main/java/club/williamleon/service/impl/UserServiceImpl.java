@@ -30,17 +30,20 @@ public class UserServiceImpl implements UserService {
 
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
-    private SessionParam sessionParam;
+    private final SessionParam sessionParam;
 
-    @Autowired
-    private PasswdRepo passwdRepo;
+    private final PasswdRepo passwdRepo;
 
-    @Autowired
-    private UserRepo userRepo;
+    private final UserRepo userRepo;
 
-    @Autowired
-    private PollCodeRepo pollCodeRepo;
+    private final PollCodeRepo pollCodeRepo;
+
+    public UserServiceImpl(SessionParam sessionParam, PasswdRepo passwdRepo, UserRepo userRepo, PollCodeRepo pollCodeRepo) {
+        this.sessionParam = sessionParam;
+        this.passwdRepo = passwdRepo;
+        this.userRepo = userRepo;
+        this.pollCodeRepo = pollCodeRepo;
+    }
 
     @Override
     public ResponseEntity<String> login(HttpServletRequest request) {
